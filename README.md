@@ -45,6 +45,9 @@
 ##  Quick Installation
 
 ```bash
+mv ~/.config/nvim ~/.config/nvimBackup 2>/dev/null
+&& mkdir -p ~/.config/nvim
+&& curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/refs/heads/main/config/init.lua -o ~/.config/nvim/init.lua
 
 ```
 
