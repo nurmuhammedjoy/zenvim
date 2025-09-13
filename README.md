@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://github.com/nurmuhammedjoy/.dotfile"><img src="https://img.shields.io/github/last-commit/nurmuhammedjoy/.dotfile?logo=github" alt="GitHub last commit"></a>
+  <a href="https://github.com/nurmuhammedjoy/zenvim"><img src="https://img.shields.io/github/last-commit/nurmuhammedjoy/zenvim?logo=github" alt="GitHub last commit"></a>
   <a href="https://termux.dev/"><img src="https://img.shields.io/badge/Termux-Android-green?logo=android" alt="Termux"></a>
   <a href="https://neovim.io/"><img src="https://img.shields.io/badge/Neovim-0.9+-57A143?logo=neovim" alt="Neovim"></a>
 </p>
@@ -168,12 +168,12 @@
 ### Star this repo
 If you find this configuration useful, please consider giving it a star!
 
-[![GitHub stars](https://img.shields.io/github/stars/nurmuhammedjoy/.dotfile?style=social)](https://github.com/nurmuhammedjoy/.dotfile)
+[![GitHub stars](https://img.shields.io/github/stars/nurmuhammedjoy/zenvim?style=social)](https://github.com/nurmuhammedjoy/zenvim)
 
 ### Report issues
 Found a bug or have a feature request? 
 
-[Open an issue](https://github.com/nurmuhammedjoy/.dotfile/issues/new)
+[Open an issue](https://github.com/nurmuhammedjoy/zenvim/issues/new)
 
 ---
 
