@@ -15,6 +15,11 @@
   <em> A powerful yet lightweight Neovim configuration optimized for coding on Android </em>
 </p>
 
+## Preview 
+
+<div style="text-align:center">
+  <img src="preview/screenshot.png" alt="App Screenshot" width="400"/>
+</div>
 
 ## Features
 
@@ -29,7 +34,7 @@
 
 ---
 
-## 📋 Requirements
+## Requirements
 
 - **Neovim 0.9** or later
 - **Unexpected Keyboard** but optional 
