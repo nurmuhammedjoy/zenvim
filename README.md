@@ -155,37 +155,89 @@ To use GitHub Copilot with this configuration, you need to authorize it:
 
 ---
 
-## Some basic Neovim shortcut
+# Neovim Shortcuts Guide
 
-### Modes
+## Modes (Expanded)
 - **Normal Mode**: Navigation and commands (default)
 - **Insert Mode**: Typing text (press <kbd>i</kbd> to enter)
 - **Visual Mode**: Selecting text (press <kbd>v</kbd> to enter)
+- **Visual Line Mode**: Select entire lines (press <kbd>Shift</kbd> + <kbd>v</kbd> to enter)
+- **Visual Block Mode**: Select blocks/columns (press <kbd>Ctrl</kbd> + <kbd>v</kbd> to enter)
+- **Command Mode**: Enter commands (press <kbd>:</kbd> to enter)
 
-### Essential Commands
-- **Save**: <kbd>:</kbd><kbd>w</kbd><kbd>Enter</kbd> in Normal mode
-- **Quit**: <kbd>:</kbd><kbd>q</kbd><kbd>Enter</kbd> in Normal mode
-- **Force Quit**: <kbd>:</kbd><kbd>q</kbd><kbd>!</kbd><kbd>Enter</kbd> in Normal mode
-- **Save & Quit**: <kbd>:</kbd><kbd>w</kbd><kbd>q</kbd><kbd>Enter</kbd> in Normal mode
+## Visual Mode Operations
+- <kbd>v</kbd>: Enter Visual mode
+- <kbd>V</kbd>: Enter Visual Line mode
+- <kbd>Ctrl</kbd> + <kbd>v</kbd>: Enter Visual Block mode
+- Use <kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd> to expand selection
+- <kbd>d</kbd>: Delete selection
+- <kbd>y</kbd>: Copy (yank) selection
+- <kbd>></kbd>: Indent selection
+- <kbd><</kbd>: Unindent selection
+- <kbd>~</kbd>: Toggle case of selection
+- <kbd>U</kbd>: Make selection uppercase
+- <kbd>u</kbd>: Make selection lowercase
 
-### Navigation (Normal Mode)
-- <kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd>: Move cursor left/down/up/right
-- <kbd>w</kbd>: Move to next word
-- <kbd>b</kbd>: Move to previous word
-- <kbd>0</kbd>: Move to start of line
-- <kbd>$</kbd>: Move to end of line
-- <kbd>gg</kbd>: Go to top of file
-- <kbd>G</kbd>: Go to end of file
+## Advanced Navigation
+- <kbd>Ctrl</kbd> + <kbd>d</kbd>: Scroll half-page down
+- <kbd>Ctrl</kbd> + <kbd>u</kbd>: Scroll half-page up
+- <kbd>Ctrl</kbd> + <kbd>f</kbd>: Scroll page down
+- <kbd>Ctrl</kbd> + <kbd>b</kbd>: Scroll page up
+- <kbd>%</kbd>: Jump to matching parenthesis/bracket
+- <kbd>{</kbd>: Jump to previous paragraph
+- <kbd>}</kbd>: Jump to next paragraph
+- <kbd>f</kbd> + <kbd>char</kbd>: Jump to next occurrence of character
+- <kbd>t</kbd> + <kbd>char</kbd>: Jump just before next occurrence of character
+- <kbd>;</kbd>: Repeat last f/t command
+- <kbd>,</kbd>: Repeat last f/t command in opposite direction
 
-### Editing (Normal Mode)
-- <kbd>i</kbd>: Enter Insert mode
-- <kbd>a</kbd>: Enter Insert mode after cursor
-- <kbd>o</kbd>: Open new line below and enter Insert mode
-- <kbd>dd</kbd>: Delete line
-- <kbd>yy</kbd>: Copy (yank) line
-- <kbd>p</kbd>: Paste after cursor
-- <kbd>u</kbd>: Undo
-- <kbd>Ctrl</kbd> + <kbd>r</kbd>: Redo
+## Advanced Editing
+- <kbd>ciw</kbd>: Change inner word
+- <kbd>ci"</kbd>: Change text inside quotes
+- <kbd>ci(</kbd>: Change text inside parentheses
+- <kbd>cc</kbd>: Change entire line
+- <kbd>.</kbd>: Repeat last edit command
+- <kbd>J</kbd>: Join line below with current line
+- <kbd>r</kbd> + <kbd>char</kbd>: Replace character under cursor
+- <kbd>~</kbd>: Toggle case of character under cursor
+
+## Search and Replace
+- <kbd>/</kbd> + pattern: Search forward
+- <kbd>?</kbd> + pattern: Search backward
+- <kbd>n</kbd>: Go to next search match
+- <kbd>N</kbd>: Go to previous search match
+- <kbd>*</kbd>: Search for word under cursor
+- <kbd>:%s/old/new/g</kbd>: Replace all occurrences in file
+- <kbd>:s/old/new/g</kbd>: Replace all occurrences in line
+
+## Working with Multiple Files
+- <kbd>:sp</kbd>: Horizontal split
+- <kbd>:vsp</kbd>: Vertical split
+- <kbd>Ctrl</kbd> + <kbd>w</kbd> + <kbd>h/j/k/l</kbd>: Navigate between splits
+- <kbd>Ctrl</kbd> + <kbd>w</kbd> + <kbd>+/-</kbd>: Resize horizontal split
+- <kbd>Ctrl</kbd> + <kbd>w</kbd> + <kbd>>/<<</kbd>: Resize vertical split
+- <kbd>:tabnew</kbd>: Create new tab
+- <kbd>gt</kbd>: Go to next tab
+- <kbd>gT</kbd>: Go to previous tab
+
+## Macros
+- <kbd>q</kbd> + <kbd>letter</kbd>: Start recording macro to register
+- <kbd>q</kbd>: Stop recording macro
+- <kbd>@</kbd> + <kbd>letter</kbd>: Execute macro
+- <kbd>@@</kbd>: Repeat last executed macro
+
+## Marks
+- <kbd>m</kbd> + <kbd>letter</kbd>: Set mark at current position
+- <kbd>'</kbd> + <kbd>letter</kbd>: Jump to line of mark
+- <kbd>`</kbd> + <kbd>letter</kbd>: Jump to exact position of mark
+
+## Folding
+- <kbd>zf</kbd>: Create fold
+- <kbd>zo</kbd>: Open fold
+- <kbd>zc</kbd>: Close fold
+- <kbd>za</kbd>: Toggle fold
+- <kbd>zR</kbd>: Open all folds
+- <kbd>zM</kbd>: Close all folds
 
 ---
 
