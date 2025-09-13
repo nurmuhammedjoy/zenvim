@@ -17,9 +17,10 @@
 
 ## Preview 
 
-<div style="text-align:center">
-  <img src="preview/screenshot.png" alt="App Screenshot" width="400"/>
-</div>
+<p align="center">
+  <img src="preview/screenshot.jpg" alt="App Screenshot" width="400"/>
+</p>
+
 
 ## Features
 
