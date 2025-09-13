@@ -1,4 +1,4 @@
-# 🚀 Neovim Configuration for Termux
+# Neovim Configuration for Termux
 
 <p align="center">
   <img src="https://neovim.io/logos/neovim-mark-flat.png" alt="Neovim Logo" width="120" height="120">
