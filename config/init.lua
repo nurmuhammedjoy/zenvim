@@ -1,6 +1,5 @@
 
--- Author: Nur Muhammed Joy
--- Date: 2025-9-13
+-- Contributor: Nurmahammadjoy, Phinixprono123
 -- Description: A comprehensive Neovim configuration optimized
 -- for Termux on Android.
 -- Features: include LSP support, autocompletion,
@@ -378,6 +377,9 @@ keymap("n", "<leader>bp", ":bprev<CR>", { desc = "Previous buffer" })
 
 -- Clear search highlighting
 keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
+
+-- <Leader>t to open a terminal
+vim.keymap.set('n', '<leader>t', ':terminal<CR>', { desc = 'Open terminal' })
 
 -- Auto commands
 vim.api.nvim_create_autocmd("BufReadPost", {
