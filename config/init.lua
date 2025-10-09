@@ -207,8 +207,9 @@ require("lazy").setup({
         automatic_installation = true,
       })
 
-      local lspconfig = require("lspconfig")
+      
       local capabilities = vim.lsp.protocol.make_client_capabilities()
+
 
       local servers = {
         html = {},
@@ -219,14 +220,45 @@ require("lazy").setup({
           filetypes = { "html", "css", "scss", "javascript", "typescript", "vue" }
         },
       }
-
       for server_name, server_config in pairs(servers) do
         server_config.capabilities = capabilities
-        lspconfig[server_name].setup(server_config)
+        vim.lsp.config(server_name, server_config)
       end
     end
+      
   },
+{
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  event = { "BufReadPost", "BufNewFile" },
+  config = function()
+    require("nvim-treesitter.configs").setup {
+      -- Only install a few essential parsers to save space & CPU
+      ensure_installed = { "lua", "bash", "python", "json", "html", "css", "vim" },
 
+      -- Disable automatic installation 
+      auto_install = false,
+
+    
+      highlight = {
+        enable = true,
+        disable = function(_, buf)
+          local max_filesize = 100 * 1024 -- 100 KB
+          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+          if ok and stats and stats.size > max_filesize then
+            return true
+          end
+        end,
+        additional_vim_regex_highlighting = false,
+      },
+
+      -- Indentation is experimental and can slow down Termux; disable it
+      indent = { enable = false },
+      sync_install = false,
+      ignore_install = {},  
+    }
+  end,
+},
   -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
