@@ -99,7 +99,7 @@ To use GitHub Copilot with this configuration, you need to authorize it:
 |:---------------:|:----:|--------|
 | <kbd>Ctrl</kbd> + <kbd>s</kbd> | Normal/Insert | Save file        |
 | <kbd>Space</kbd> + <kbd>nh</kbd> | Normal | Clear search highlights.            |
-
+| <kbd>Ctrl</kbd> + <kbd>\</kbd> | Normal | Open terminal        |
 </div>
 
 ### File Explorer (Neo-tree)
@@ -108,7 +108,7 @@ To use GitHub Copilot with this configuration, you need to authorize it:
 
 | Key Combination | Mode | Action |
 |:---------------:|:----:|--------|
-| <kbd>Space</kbd> + <kbd>e</kbd> | Normal | Toggle file explorer |
+| <kbd>CTRL</kbd> + <kbd>e</kbd> | Normal | Toggle file explorer |
 
 </div>
 
