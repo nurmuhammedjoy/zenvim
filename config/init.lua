@@ -335,9 +335,36 @@ require("lazy").setup({
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require('lualine').setup({
-        options = {
-          theme = 'gruvbox',
-        },
+    options = {
+
+    icons_enabled = true,      
+    theme = 'gruvbox',        
+    component_separators = '|',
+    section_separators = '',
+    disabled_filetypes = {},
+
+    },
+
+    sections = {
+
+    lualine_a = {'mode'},
+    lualine_b = {'branch'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+
+    },
+    inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+     },
+      tabline = {},
+      extensions = {}
       })
     end
   },
@@ -399,6 +426,25 @@ require("lazy").setup({
   end,
 },
 
+{
+  'akinsho/toggleterm.nvim',
+  version = "*",
+  config = function()
+    require('toggleterm').setup({
+      size = 20,
+      open_mapping = [[<c-\>]],   -- Ctrl + \
+      shade_terminals = true,
+      shading_factor = 2,
+      direction = 'float',        -- 'horizontal' | 'vertical' | 'tab' | 'float'
+      float_opts = {
+        border = 'curved',
+      },
+    })
+  end
+},
+
+
+
 }, {
   performance = {
     cache = { enabled = true },         
@@ -418,52 +464,46 @@ require("lazy").setup({
   },
 })
 
--- Key mappings
 local keymap = vim.keymap.set
 
 -- General mappings
+keymap('v', 'd', '"_d', { noremap = true, silent = true })
 
--- Save file with Ctrl+s
-keymap("n", "<C-s>", ":w<CR>", { desc = "Save file" })
+-- Save file
+keymap("n", "<C-s>", ":w<CR>", { desc = "Save file", silent = true })
+keymap("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file in insert mode", silent = true })
 
--- Save file in insert mode with Ctrl+s
-keymap("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file in insert mode" })
+-- Quit Neovim
+keymap("n", "<C-q>", ":q<CR>", { desc = "Quit Neovim", silent = true })
+keymap("i", "<C-q>", "<Esc>:q<CR>", { desc = "Quit Neovim", silent = true })
 
--- Quit Neovim with Ctrl+q
-keymap("n", "<C-q>", ":q<CR>", { desc = "Quit Neovim" })
-
--- Neo-tree toggle with <Leader>e
-keymap("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Toggle Neo-tree" })
+-- Neo-tree toggle
+keymap("n", "<C-e>", ":Neotree toggle<CR>", { desc = "Toggle Neo-tree", silent = true })
 
 -- Telescope mappings
-keymap("n", "<leader>ff", ":Telescope find_files<CR>", { desc = "Find files" })
-keymap("n", "<leader>fg", ":Telescope live_grep<CR>", { desc = "Live grep" })
-keymap("n", "<leader>fb", ":Telescope buffers<CR>", { desc = "Find buffers" })
+keymap("n", "<leader>ff", ":Telescope find_files<CR>", { desc = "Find files", silent = true })
+keymap("n", "<leader>fg", ":Telescope live_grep<CR>", { desc = "Live grep", silent = true })
+keymap("n", "<leader>fb", ":Telescope buffers<CR>", { desc = "Find buffers", silent = true })
 
 -- LSP mappings
-keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
-keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
-keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
-keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
-keymap("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, { desc = "Format" })
+keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition", silent = true })
+keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references", silent = true })
+keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation", silent = true })
+keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename", silent = true })
+keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions", silent = true })
+keymap("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, { desc = "Format", silent = true })
 
 -- Copilot mappings
-keymap("i", "<C-g>", 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false, desc = "Accept Copilot" })
+keymap("i", "<C-g>", 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false, silent = true, desc = "Accept Copilot" })
 keymap("i", "<C-\\>", 'copilot#Dismiss()', { expr = true, silent = true, desc = "Dismiss Copilot" })
 
 -- Buffer navigation
-keymap("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
-keymap("n", "<leader>bp", ":bprev<CR>", { desc = "Previous buffer" })
+keymap("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer", silent = true })
+keymap("n", "<leader>bp", ":bprev<CR>", { desc = "Previous buffer", silent = true })
 
 -- Clear search highlighting
-keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
+keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights", silent = true })
 
--- <Leader>t to open a terminal
-vim.keymap.set('n', '<leader>t', function()
-  vim.cmd('botright split | terminal')
-  vim.cmd('resize 10') 
-end, { desc = 'Open bottom terminal' })
 
 -- Auto commands
 vim.api.nvim_create_autocmd("BufReadPost", {
