@@ -25,7 +25,7 @@
 ## Features
 
 -  **Gorgeous UI** with Gruvbox theme and transparent background
--  **Intuitive File Navigation** with Neo-tree explorer  
+-  **Intuitive File Navigation** with Nvim-tree explorer  
 -  **Powerful Search** with Telescope fuzzy finder
 -  **Intelligent Code Assistance** with LSP and nvim-cmp
 -  **AI Coding Partner** with GitHub Copilot integration
@@ -38,27 +38,30 @@
 ## Requirements
 
 - **Neovim 0.9** or later
-- **Unexpected Keyboard** but optional 
+- **Unexpected Keyboard** (optional)
 
 ---
 
 ##  Quick Installation
 
-If ~/.config/nvim doesn’t exist, create it first:
+If ~/.config/nvim doesn't exist, create it first:
 
 ```bash
 mkdir -p ~/.config/nvim
 ```
+
 Make a backup of your current Neovim files:
 
 ```bash
 mv ~/.config/nvim{,.bak}
 ```
-downloaded the config: 
+
+Download the config: 
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/refs/heads/main/config/init.lua -o ~/.config/nvim/init.lua
 ```
+
 ---
 
 ## Authorizing GitHub Copilot
@@ -97,18 +100,19 @@ To use GitHub Copilot with this configuration, you need to authorize it:
 
 | Key Combination | Mode | Action |
 |:---------------:|:----:|--------|
-| <kbd>Ctrl</kbd> + <kbd>s</kbd> | Normal/Insert | Save file        |
-| <kbd>Space</kbd> + <kbd>nh</kbd> | Normal | Clear search highlights.            |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | Normal | Open terminal        |
+| <kbd>Ctrl</kbd> + <kbd>s</kbd> | Normal/Insert | Save file |
+| <kbd>Space</kbd> + <kbd>nh</kbd> | Normal | Clear search highlights |
+| <kbd>Ctrl</kbd> + <kbd>\</kbd> | Normal | Toggle terminal |
+
 </div>
 
-### File Explorer (Neo-tree)
+### File Explorer (Nvim-tree)
 
 <div align="center">
 
 | Key Combination | Mode | Action |
 |:---------------:|:----:|--------|
-| <kbd>CTRL</kbd> + <kbd>e</kbd> | Normal | Toggle file explorer |
+| <kbd>Ctrl</kbd> + <kbd>e</kbd> | Normal | Toggle file explorer |
 
 </div>
 
@@ -257,7 +261,7 @@ To use GitHub Copilot with this configuration, you need to authorize it:
 |:-------|:------------|
 | **[lazy.nvim](https://github.com/folke/lazy.nvim)** | Modern plugin manager |
 | **[gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim)** | Beautiful color scheme |
-| **[neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim)** | File explorer with git integration |
+| **[nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua)** | File explorer with git integration |
 | **[telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)** | Fuzzy finder and searcher |
 | **[copilot.vim](https://github.com/github/copilot.vim)** | GitHub Copilot AI integration |
 | **[nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)** | Language server configuration |
@@ -266,10 +270,21 @@ To use GitHub Copilot with this configuration, you need to authorize it:
 | **[lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)** | Sleek status line |
 | **[nvim-autopairs](https://github.com/windwp/nvim-autopairs)** | Automatic bracket pairs |
 | **[Comment.nvim](https://github.com/numToStr/Comment.nvim)** | Smart code commenting |
+| **[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)** | Syntax highlighting and parsing |
+| **[alpha-nvim](https://github.com/goolord/alpha-nvim)** | Customizable dashboard |
+| **[toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)** | Terminal toggle functionality |
 
 </div>
 
 ---
+
+## Contributors
+
+- **nurmuhammedjoy** - Main contributor
+- **Phinixprono123** - Contributor
+
+---
+
 ## Support & Contribute
 
 ### Star this repo
@@ -283,3 +298,4 @@ Found a bug or have a feature request?
 [Open an issue](https://github.com/nurmuhammedjoy/zenvim/issues/new)
 
 ---
+
