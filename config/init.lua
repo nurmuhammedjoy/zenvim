@@ -102,50 +102,43 @@ require("lazy").setup({
   },
 
   -- File explorer
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require("neo-tree").setup({
-        close_if_last_window = false,
-        popup_border_style = "rounded",
-        enable_git_status = false,
-        enable_diagnostics = true,
-        window = {
-          position = "float",
-          popup = {
-            size = {
-              height = "60%",
-              width = "85%",
-            },
-            position = "50%",
-            border = "rounded",
+ {
+  "nvim-tree/nvim-tree.lua",
+  dependencies = "nvim-tree/nvim-web-devicons",
+  config = function()
+    require("nvim-tree").setup({
+      disable_netrw = true,
+      hijack_netrw = true,
+      open_on_tab = false,
+      hijack_cursor = true,
+      update_cwd = true,
+      view = {
+        width = 30,
+        side = "left",
+        hide_root_folder = false,
+        number = false,
+        relativenumber = false,
+      },
+      renderer = {
+        icons = {
+          show = {
+            file = true,
+            folder = true,
+            folder_arrow = true,
+            git = true,
           },
         },
-        filesystem = {
-          filtered_items = {
-            visible = false,
-            hide_dotfiles = false,
-            hide_gitignored = true,
-            hide_hidden = false,
-          },
-          follow_current_file = {
-            enabled = true,
-            leave_dirs_open = false,
-          },
-          use_libuv_file_watcher = false,
-        },
-      })
-    end
-  },
+      },
+      filters = {
+        dotfiles = false,
+        custom = {".git", "node_modules", ".cache"},
+      },
+    })
+  end
+ },
 
   -- Fuzzy finder
-{
+ {
   'nvim-telescope/telescope.nvim',
   tag = '0.1.5',
   dependencies = { 'nvim-lua/plenary.nvim' },
@@ -166,7 +159,7 @@ require("lazy").setup({
       },
     })
   end
-},
+ },
 
   -- GitHub Copilot
   {
@@ -195,7 +188,8 @@ require("lazy").setup({
   },
 
   -- LSP Configuration
-  {
+  --
+    {
     "neovim/nvim-lspconfig",
     dependencies = {
       "mason-org/mason.nvim",
@@ -241,11 +235,10 @@ require("lazy").setup({
   event = { "BufReadPost", "BufNewFile" },
   config = function()
     require("nvim-treesitter.configs").setup {
-      -- Only install a few essential parsers to save space & CPU
       ensure_installed = { "lua", "bash", "python", "json", "html", "css", "vim" },
 
-      -- Disable automatic installation 
-      auto_install = false,
+      
+      auto_install = true,
 
     
       highlight = {
