@@ -102,41 +102,56 @@ require("lazy").setup({
   },
 
   -- File explorer
- {
-  "nvim-tree/nvim-tree.lua",
-  dependencies = "nvim-tree/nvim-web-devicons",
-  config = function()
-    require("nvim-tree").setup({
-      disable_netrw = true,
-      hijack_netrw = true,
-      open_on_tab = false,
-      hijack_cursor = true,
-      update_cwd = true,
+
+  {
+    "nvim-tree/nvim-tree.lua",
+     dependencies = "nvim-tree/nvim-web-devicons",
+     config = function()
+
+    local nvim_tree = require("nvim-tree")
+  
+    local ui = vim.api.nvim_list_uis()[1]
+    local width  = math.floor(ui.width  * 0.85)
+    local height = math.floor(ui.height * 0.60)
+    local row    = math.floor((ui.height  - height) * 0.5)
+    local col    = math.floor((ui.width   - width)  * 0.5)
+
+    nvim_tree.setup({
+      disable_netrw   = true,
+      hijack_netrw    = true,
+      update_cwd      = true,
       view = {
-        width = 30,
-        side = "left",
-        hide_root_folder = false,
-        number = false,
-        relativenumber = false,
-      },
-      renderer = {
-        icons = {
-          show = {
-            file = true,
-            folder = true,
-            folder_arrow = true,
-            git = true,
+        float = {
+          enable = true,
+          open_win_config = {
+            relative = "editor",
+            border   = "rounded",
+            width    = width,
+            height   = height,
+            row      = row,
+            col      = col,
           },
         },
       },
       filters = {
         dotfiles = false,
-        custom = {".git", "node_modules", ".cache"},
+        custom   = { ".git", "node_modules", ".cache" },
+      },
+      renderer = {
+        icons = {
+          show = {
+            file         = true,
+            folder       = true,
+            folder_arrow = true,
+            git          = true,
+          },
+        },
       },
     })
+
+    
   end
  },
-
   -- Fuzzy finder
  {
   'nvim-telescope/telescope.nvim',
@@ -489,8 +504,8 @@ keymap("i", "<C-s>", "<Esc>:w<CR>a", { desc = "Save file in insert mode", silent
 keymap("n", "<C-q>", ":q<CR>", { desc = "Quit Neovim", silent = true })
 keymap("i", "<C-q>", "<Esc>:q<CR>", { desc = "Quit Neovim", silent = true })
 
--- Neo-tree toggle
-keymap("n", "<C-e>", ":Neotree toggle<CR>", { desc = "Toggle Neo-tree", silent = true })
+-- nvim_tree toggle
+keymap("n", "<C-e>", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer", silent = true })
 
 -- Telescope mappings
 keymap("n", "<leader>ff", ":Telescope find_files<CR>", { desc = "Find files", silent = true })
