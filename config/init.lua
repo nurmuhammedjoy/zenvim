@@ -46,6 +46,7 @@ vim.opt.termguicolors = true
 vim.opt.cursorline = true
 vim.opt.mouse = "a"
 vim.opt.clipboard = "unnamedplus"
+vim.o.numberwidth = 1
 
 -- Leader key
 vim.g.mapleader = " "
@@ -113,17 +114,24 @@ require("lazy").setup({
       require("neo-tree").setup({
         close_if_last_window = false,
         popup_border_style = "rounded",
-        enable_git_status = true,
+        enable_git_status = false,
         enable_diagnostics = true,
         window = {
-          position = "left",
-          width = 30,
+          position = "float",
+          popup = {
+            size = {
+              height = "60%",
+              width = "85%",
+            },
+            position = "50%",
+            border = "rounded",
+          },
         },
         filesystem = {
           filtered_items = {
             visible = false,
             hide_dotfiles = false,
-            hide_gitignored = false,
+            hide_gitignored = true,
             hide_hidden = false,
           },
           follow_current_file = {
@@ -137,28 +145,28 @@ require("lazy").setup({
   },
 
   -- Fuzzy finder
-  {
-    'nvim-telescope/telescope.nvim',
-    tag = '0.1.5',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      require('telescope').setup({
-        defaults = {
-          file_ignore_patterns = { 
-            "node_modules/.*", 
-            "%.git/.*", 
-            "%.DS_Store",
-            "package%-lock%.json"
-          },
-          layout_strategy = "horizontal",
-          layout_config = {
-            width = 0.87,
-            height = 0.80,
-          },
+{
+  'nvim-telescope/telescope.nvim',
+  tag = '0.1.5',
+  dependencies = { 'nvim-lua/plenary.nvim' },
+  config = function()
+    require('telescope').setup({
+      defaults = {
+        file_ignore_patterns = {
+          "node_modules/.*",
+          "%.git/.*",
+          "%.DS_Store",
+          "package%-lock%.json"
         },
-      })
-    end
-  },
+        layout_strategy = "horizontal",
+        layout_config = {
+          width = 0.87,
+          height = 0.80,
+        },
+      },
+    })
+  end
+},
 
   -- GitHub Copilot
   {
@@ -427,22 +435,33 @@ require("lazy").setup({
 },
 
 {
-  'akinsho/toggleterm.nvim',
-  version = "*",
-  config = function()
-    require('toggleterm').setup({
-      size = 20,
-      open_mapping = [[<c-\>]],   -- Ctrl + \
-      shade_terminals = true,
-      shading_factor = 2,
-      direction = 'float',        -- 'horizontal' | 'vertical' | 'tab' | 'float'
-      float_opts = {
-        border = 'curved',
-      },
-    })
-  end
-},
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+        require('toggleterm').setup({
+            
+            size = 20,  
 
+            open_mapping = [[<c-\>]],   -- Ctrl + \
+            shade_terminals = true,
+            shading_factor = 2,
+            direction = 'float',        
+
+            float_opts = {
+                border = 'curved',      
+                width = function()      
+                    return math.floor(vim.o.columns * 0.85)
+                end,
+                height = function()     
+                    return math.floor(vim.o.lines * 0.6)
+                end,
+                winblend = 0,           
+            },
+
+            persist_size = false,       
+        })
+    end
+}
 
 
 }, {
