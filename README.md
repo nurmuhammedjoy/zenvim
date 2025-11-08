@@ -19,6 +19,7 @@
 
 <p align="center">
   <img src="preview/screenshot.jpg" alt="App Screenshot" width="400"/>
+  <source src="preview/video.mp4" type="video/mp4">  
 </p>
 
 
