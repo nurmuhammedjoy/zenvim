@@ -1,4 +1,4 @@
-# Neovim Configuration for Termux
+# Zenvim: Neovim for Termux
 
 <p align="center">
   <img src="https://neovim.io/logos/neovim-mark-flat.png" alt="Neovim Logo" width="120" height="120">
@@ -12,294 +12,157 @@
 </p>
 
 <p align="center">
-  <em> A powerful yet lightweight Neovim configuration optimized for coding on Android </em>
+  <em>A powerful, lightweight, and modular Neovim configuration optimized for coding on Android via Termux.</em>
 </p>
 
-## Preview 
+---
+
+## ⚡ Introduction
+
+**Zenvim** has been completely rewritten in Lua to provide a modern, blazing-fast coding experience on mobile devices. It leverages the latest Neovim features, including the **Lazy.nvim** package manager, **LSP** (Language Server Protocol) via Mason, and seamless **GitHub Copilot** integration.
+
+### ✨ Key Features
+
+- **🚀 Performance Optimized**: Fast startup time with lazy-loading plugins.
+- **📦 Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
+- **🧠 Intelligent Coding**: 
+  - Full **LSP** support (HTML, CSS, TS, JSON, Emmet) via [`mason.nvim`](https://github.com/williamboman/mason.nvim).
+  - Autocompletion with [`nvim-cmp`](https://github.com/hrsh7th/nvim-cmp).
+  - AI assistance with **GitHub Copilot**.
+- **🎨 Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
+- **📂 Enhanced Navigation**: 
+  - [`nvim-tree`](https://github.com/nvim-tree/nvim-tree.lua) for file management.
+  - [`telescope`](https://github.com/nvim-telescope/telescope.nvim) for fuzzy finding.
+- **⌨️ Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
+
+---
+
+## 📸 Preview
 
 <p align="center">
   <img src="preview/screenshot.jpg" alt="App Screenshot" width="400"/>
-  <video controls width="600">
-  <source src="video.mp4" type="video/mp4">
-</video>
+  <br>
+  <!-- Replace video.mp4 with a relative link if available in the repo -->
+  <!-- <video controls width="600"><source src="video.mp4" type="video/mp4"></video> -->
 </p>
 
-
-## Features
-
--  **Gorgeous UI** with Gruvbox theme and transparent background
--  **Intuitive File Navigation** with Nvim-tree explorer  
--  **Powerful Search** with Telescope fuzzy finder
--  **Intelligent Code Assistance** with LSP and nvim-cmp
--  **AI Coding Partner** with GitHub Copilot integration
--  **Lightning Fast** with performance optimizations for mobile
--  **Touch-Friendly** key mappings designed for Termux
--  **Preconfigured** for web development
-
 ---
 
-## Requirements
+## 🛠 Installation
 
-- **Neovim 0.9** or later
-- **Unexpected Keyboard** (optional)
+### Prerequisites
+- **Termux** app installed on Android.
+- **Neovim** (v0.9.0 or newer).
+- **Git** and **Curl**.
 
----
-
-##  Quick Installation
-
-If ~/.config/nvim doesn't exist, create it first:
+### Automatic Install
+Run this single command in Termux to back up your old config and install Zenvim:
 
 ```bash
-mkdir -p ~/.config/nvim
+curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | sh
 ```
 
-Make a backup of your current Neovim files:
+### Manual Install
+If you prefer to install manually:
 
-```bash
-mv ~/.config/nvim{,.bak}
-```
-
-Then, run the following command to install Zenvim:
-
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/refs/heads/main/build | sh
-```
-
----
-
-## Authorizing GitHub Copilot
-
-To use GitHub Copilot with this configuration, you need to authorize it:
-
-1. **Prerequisite**: 
-   - Have an active GitHub Copilot subscription
-   - Be signed in to your GitHub account
-
-2. **Authentication process**:
-   - Open Neovim
-   - Run the command `:Copilot auth` in normal mode
-   - Follow the on-screen instructions:
-     - A one-time code will be displayed
-     - Open the provided URL in your browser
-     - Enter the code when prompted
-     - Authorize GitHub Copilot to access your account
-
-3. **Verification**:
-   - After successful authentication, you should see a confirmation message
-   - Restart Neovim to ensure Copilot is properly initialized
-   - Start typing code, and Copilot suggestions should appear as ghost text
-
-> **Note**: GitHub Copilot requires an internet connection to function
+1. **Backup existing config:**
+   ```bash
+   mv ~/.config/nvim ~/.config/nvim.bak
+   ```
+2. **Clone the repository:**
+   ```bash
+   git clone https://github.com/nurmuhammedjoy/zenvim.git
+   ```
+3. **Move configuration files:**
+   ```bash
+   mkdir -p ~/.config/nvim
+   cp -r zenvim/config/* ~/.config/nvim/
+   ```
+4. **Clean up:**
+   ```bash
+   rm -rf zenvim
+   ```
 
 ---
 
-##  Key Bindings
+## ⌨️ Key Bindings
 
-> **Note:** The leader key is set to <kbd>Space</kbd>
+**Leader Key:** <kbd>Space</kbd>
 
-### General
+### 📁 General & File Management
 
-<div align="center">
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| <kbd>Ctrl</kbd> + <kbd>s</kbd> | `n/i` | Save file |
+| <kbd>Ctrl</kbd> + <kbd>q</kbd> | `n/i` | Quit Neovim |
+| <kbd>Ctrl</kbd> + <kbd>e</kbd> | `n` | Toggle File Explorer (NvimTree) |
+| <kbd>Space</kbd> + <kbd>nh</kbd> | `n` | Clear search highlights |
+| <kbd>Space</kbd> + <kbd>bn</kbd> | `n` | Next Buffer |
+| <kbd>Space</kbd> + <kbd>bp</kbd> | `n` | Previous Buffer |
+| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `n/t` | Toggle Terminal |
 
-| Key Combination | Mode | Action |
-|:---------------:|:----:|--------|
-| <kbd>Ctrl</kbd> + <kbd>s</kbd> | Normal/Insert | Save file |
-| <kbd>Space</kbd> + <kbd>nh</kbd> | Normal | Clear search highlights |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | Normal | Toggle terminal |
+### 🔍 Search (Telescope)
 
-</div>
+| Key | Action |
+| :--- | :--- |
+| <kbd>Space</kbd> + <kbd>ff</kbd> | Find files |
+| <kbd>Space</kbd> + <kbd>fg</kbd> | Live Grep (search text in files) |
+| <kbd>Space</kbd> + <kbd>fb</kbd> | Find open buffers |
+| <kbd>Space</kbd> + <kbd>fo</kbd> | Recent files (Oldfiles) |
 
-### File Explorer (Nvim-tree)
+### 🧠 LSP & Coding
 
-<div align="center">
+| Key | Action |
+| :--- | :--- |
+| <kbd>gd</kbd> | Go to Definition |
+| <kbd>gr</kbd> | Go to References |
+| <kbd>K</kbd> | Show Hover Documentation |
+| <kbd>Space</kbd> + <kbd>rn</kbd> | Rename Symbol |
+| <kbd>Space</kbd> + <kbd>ca</kbd> | Code Actions |
+| <kbd>Space</kbd> + <kbd>f</kbd> | Format File |
+| <kbd>Space</kbd> + <kbd>r</kbd> | Search & Replace (Confirm) |
+| <kbd>Space</kbd> + <kbd>R</kbd> | Search & Replace (All) |
 
-| Key Combination | Mode | Action |
-|:---------------:|:----:|--------|
-| <kbd>Ctrl</kbd> + <kbd>e</kbd> | Normal | Toggle file explorer |
+### 🤖 GitHub Copilot
 
-</div>
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| <kbd>Ctrl</kbd> + <kbd>g</kbd> | `i` | Accept Suggestion |
+| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `i` | Dismiss Suggestion |
 
-### Fuzzy Finder (Telescope)
+### ↕️ Line Moving
 
-<div align="center">
-
-| Key Combination | Mode | Action |
-|:---------------:|:----:|--------|
-| <kbd>Space</kbd> + <kbd>ff</kbd> | Normal | Find files |
-| <kbd>Space</kbd> + <kbd>fg</kbd> | Normal | Live grep (search in files) |
-| <kbd>Space</kbd> + <kbd>fb</kbd> | Normal | Browse buffers |
-
-</div>
-
-### LSP Features
-
-<div align="center">
-
-| Key Combination | Mode | Action |
-|:---------------:|:----:|--------|
-| <kbd>gd</kbd> | Normal | Go to definition |
-| <kbd>gr</kbd> | Normal | Find references |
-| <kbd>K</kbd> | Normal | Show hover documentation |
-| <kbd>Space</kbd> + <kbd>rn</kbd> | Normal | Rename symbol |
-| <kbd>Space</kbd> + <kbd>ca</kbd> | Normal | Code actions |
-| <kbd>Space</kbd> + <kbd>f</kbd> | Normal | Format file |
-
-</div>
-
-### GitHub Copilot
-
-<div align="center">
-
-| Key Combination | Mode | Action |
-|:---------------:|:----:|--------|
-| <kbd>Ctrl</kbd> + <kbd>g</kbd> | Insert | Accept suggestion |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | Insert | Dismiss suggestion |
-
-</div>
-
-### Buffer Navigation
-
-<div align="center">
-
-| Key Combination | Mode | Action |
-|:---------------:|:----:|--------|
-| <kbd>Space</kbd> + <kbd>bn</kbd> | Normal | Next buffer |
-| <kbd>Space</kbd> + <kbd>bp</kbd> | Normal | Previous buffer |
-
-</div>
+| Key | Action |
+| :--- | :--- |
+| <kbd>Ctrl</kbd> + <kbd>⬆️⬇️</kbd> | Move line up/down |
+| <kbd>Ctrl</kbd> + <kbd>⬅️➡️</kbd> | Move selection left/right |
 
 ---
 
-# Neovim Shortcuts Guide
+## 📦 Included Plugins
 
-## Modes (Expanded)
-- **Normal Mode**: Navigation and commands (default)
-- **Insert Mode**: Typing text (press <kbd>i</kbd> to enter)
-- **Visual Mode**: Selecting text (press <kbd>v</kbd> to enter)
-- **Visual Line Mode**: Select entire lines (press <kbd>Shift</kbd> + <kbd>v</kbd> to enter)
-- **Visual Block Mode**: Select blocks/columns (press <kbd>Ctrl</kbd> + <kbd>v</kbd> to enter)
-- **Command Mode**: Enter commands (press <kbd>:</kbd> to enter)
+Zenvim comes pre-configured with these essential plugins:
 
-## Visual Mode Operations
-- <kbd>v</kbd>: Enter Visual mode
-- <kbd>V</kbd>: Enter Visual Line mode
-- <kbd>Ctrl</kbd> + <kbd>v</kbd>: Enter Visual Block mode
-- Use <kbd>h</kbd><kbd>j</kbd><kbd>k</kbd><kbd>l</kbd> to expand selection
-- <kbd>d</kbd>: Delete selection
-- <kbd>y</kbd>: Copy (yank) selection
-- <kbd>></kbd>: Indent selection
-- <kbd><</kbd>: Unindent selection
-- <kbd>~</kbd>: Toggle case of selection
-- <kbd>U</kbd>: Make selection uppercase
-- <kbd>u</kbd>: Make selection lowercase
-
-## Advanced Navigation
-- <kbd>Ctrl</kbd> + <kbd>d</kbd>: Scroll half-page down
-- <kbd>Ctrl</kbd> + <kbd>u</kbd>: Scroll half-page up
-- <kbd>Ctrl</kbd> + <kbd>f</kbd>: Scroll page down
-- <kbd>Ctrl</kbd> + <kbd>b</kbd>: Scroll page up
-- <kbd>%</kbd>: Jump to matching parenthesis/bracket
-- <kbd>{</kbd>: Jump to previous paragraph
-- <kbd>}</kbd>: Jump to next paragraph
-- <kbd>f</kbd> + <kbd>char</kbd>: Jump to next occurrence of character
-- <kbd>t</kbd> + <kbd>char</kbd>: Jump just before next occurrence of character
-- <kbd>;</kbd>: Repeat last f/t command
-- <kbd>,</kbd>: Repeat last f/t command in opposite direction
-
-## Advanced Editing
-- <kbd>ciw</kbd>: Change inner word
-- <kbd>ci"</kbd>: Change text inside quotes
-- <kbd>ci(</kbd>: Change text inside parentheses
-- <kbd>cc</kbd>: Change entire line
-- <kbd>.</kbd>: Repeat last edit command
-- <kbd>J</kbd>: Join line below with current line
-- <kbd>r</kbd> + <kbd>char</kbd>: Replace character under cursor
-- <kbd>~</kbd>: Toggle case of character under cursor
-
-## Search and Replace
-- <kbd>/</kbd> + pattern: Search forward
-- <kbd>?</kbd> + pattern: Search backward
-- <kbd>n</kbd>: Go to next search match
-- <kbd>N</kbd>: Go to previous search match
-- <kbd>*</kbd>: Search for word under cursor
-- <kbd>:%s/old/new/g</kbd>: Replace all occurrences in file
-- <kbd>:s/old/new/g</kbd>: Replace all occurrences in line
-
-## Working with Multiple Files
-- <kbd>:sp</kbd>: Horizontal split
-- <kbd>:vsp</kbd>: Vertical split
-- <kbd>Ctrl</kbd> + <kbd>w</kbd> + <kbd>h/j/k/l</kbd>: Navigate between splits
-- <kbd>Ctrl</kbd> + <kbd>w</kbd> + <kbd>+/-</kbd>: Resize horizontal split
-- <kbd>Ctrl</kbd> + <kbd>w</kbd> + <kbd>>/<<</kbd>: Resize vertical split
-- <kbd>:tabnew</kbd>: Create new tab
-- <kbd>gt</kbd>: Go to next tab
-- <kbd>gT</kbd>: Go to previous tab
-
-## Macros
-- <kbd>q</kbd> + <kbd>letter</kbd>: Start recording macro to register
-- <kbd>q</kbd>: Stop recording macro
-- <kbd>@</kbd> + <kbd>letter</kbd>: Execute macro
-- <kbd>@@</kbd>: Repeat last executed macro
-
-## Marks
-- <kbd>m</kbd> + <kbd>letter</kbd>: Set mark at current position
-- <kbd>'</kbd> + <kbd>letter</kbd>: Jump to line of mark
-- <kbd>`</kbd> + <kbd>letter</kbd>: Jump to exact position of mark
-
-## Folding
-- <kbd>zf</kbd>: Create fold
-- <kbd>zo</kbd>: Open fold
-- <kbd>zc</kbd>: Close fold
-- <kbd>za</kbd>: Toggle fold
-- <kbd>zR</kbd>: Open all folds
-- <kbd>zM</kbd>: Close all folds
+- **Core**: `lazy.nvim`, `plenary.nvim`
+- **UI**: `gruvbox.nvim` (Theme), `lualine.nvim` (Status), `alpha-nvim` (Dashboard), `nvim-web-devicons`
+- **Editor**: `nvim-tree.lua` (Explorer), `telescope.nvim` (Finder), `nvim-treesitter` (Syntax), `mini.move` (Line moving), `nvim-surround`
+- **LSP & Completion**: `nvim-lspconfig`, `mason.nvim`, `nvim-cmp`, `LuaSnip`
+- **Tools**: `copilot.vim` (AI), `toggleterm.nvim` (Terminal)
 
 ---
 
-## Included Plugins
+## 🤝 Contributing
 
-<div align="center">
+Contributions are welcome! If you find a bug or want to add a feature, feel free to open an issue or submit a pull request.
 
-| Plugin | Description |
-|:-------|:------------|
-| **[lazy.nvim](https://github.com/folke/lazy.nvim)** | Modern plugin manager |
-| **[gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim)** | Beautiful color scheme |
-| **[nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua)** | File explorer with git integration |
-| **[telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)** | Fuzzy finder and searcher |
-| **[copilot.vim](https://github.com/github/copilot.vim)** | GitHub Copilot AI integration |
-| **[nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)** | Language server configuration |
-| **[mason.nvim](https://github.com/williamboman/mason.nvim)** | Package manager for LSP servers |
-| **[nvim-cmp](https://github.com/hrsh7th/nvim-cmp)** | Intelligent completion engine |
-| **[lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)** | Sleek status line |
-| **[nvim-autopairs](https://github.com/windwp/nvim-autopairs)** | Automatic bracket pairs |
-| **[Comment.nvim](https://github.com/numToStr/Comment.nvim)** | Smart code commenting |
-| **[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)** | Syntax highlighting and parsing |
-| **[alpha-nvim](https://github.com/goolord/alpha-nvim)** | Customizable dashboard |
-| **[toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)** | Terminal toggle functionality |
-
-</div>
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## Contributors
-
-- **nurmuhammedjoy** - Main contributor
-- **Phinixprono123** - Contributor
-
----
-
-## Support & Contribute
-
-### Star this repo
-If you find this configuration useful, please consider giving it a star!
-
-[![GitHub stars](https://img.shields.io/github/stars/nurmuhammedjoy/zenvim?style=social)](https://github.com/nurmuhammedjoy/zenvim)
-
-### Report issues
-Found a bug or have a feature request? 
-
-[Open an issue](https://github.com/nurmuhammedjoy/zenvim/issues/new)
-
----
-
+<p align="center">
+  Made with ❤️ by <strong>nurmuhammedjoy</strong>
+</p>
