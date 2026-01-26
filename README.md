@@ -19,25 +19,26 @@
 
 ## ⚡ Introduction
 
-**Zenvim** has been completely rewritten in Lua to provide a modern, blazing-fast coding experience on mobile devices. It leverages the latest Neovim features, including the **Lazy.nvim** package manager, **LSP** (Language Server Protocol) via Mason, and seamless **GitHub Copilot** integration.
+A powerful yet lightweight Neovim configuration optimized for coding on Termux
+
 
 ### ✨ Key Features
 
-- **🚀 Performance Optimized**: Fast startup time with lazy-loading plugins.
-- **📦 Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
-- **🧠 Intelligent Coding**: 
+- ** Performance Optimized**: Fast startup time with lazy-loading plugins.
+- ** Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
+- ** Intelligent Coding**: 
   - Full **LSP** support (HTML, CSS, TS, JSON, Emmet) via [`mason.nvim`](https://github.com/williamboman/mason.nvim).
   - Autocompletion with [`nvim-cmp`](https://github.com/hrsh7th/nvim-cmp).
   - AI assistance with **GitHub Copilot**.
-- **🎨 Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
-- **📂 Enhanced Navigation**: 
+- ** Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
+- ** Enhanced Navigation**: 
   - [`nvim-tree`](https://github.com/nvim-tree/nvim-tree.lua) for file management.
   - [`telescope`](https://github.com/nvim-telescope/telescope.nvim) for fuzzy finding.
-- **⌨️ Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
+- ** Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
 
 ---
 
-## 📸 Preview
+## Preview
 
 <p align="center">
   <img src="preview/screenshot.jpg" alt="App Screenshot" width="400"/>
@@ -48,7 +49,7 @@
 
 ---
 
-## 🛠 Installation
+##  Installation
 
 ### Prerequisites
 - **Termux** app installed on Android.
@@ -85,11 +86,11 @@ If you prefer to install manually:
 
 ---
 
-## ⌨️ Key Bindings
+##  Key Bindings
 
 **Leader Key:** <kbd>Space</kbd>
 
-### 📁 General & File Management
+###  General & File Management
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
@@ -101,7 +102,7 @@ If you prefer to install manually:
 | <kbd>Space</kbd> + <kbd>bp</kbd> | `n` | Previous Buffer |
 | <kbd>Ctrl</kbd> + <kbd>\</kbd> | `n/t` | Toggle Terminal |
 
-### 🔍 Search (Telescope)
+###  Search (Telescope)
 
 | Key | Action |
 | :--- | :--- |
@@ -110,7 +111,7 @@ If you prefer to install manually:
 | <kbd>Space</kbd> + <kbd>fb</kbd> | Find open buffers |
 | <kbd>Space</kbd> + <kbd>fo</kbd> | Recent files (Oldfiles) |
 
-### 🧠 LSP & Coding
+###  LSP & Coding
 
 | Key | Action |
 | :--- | :--- |
@@ -123,14 +124,14 @@ If you prefer to install manually:
 | <kbd>Space</kbd> + <kbd>r</kbd> | Search & Replace (Confirm) |
 | <kbd>Space</kbd> + <kbd>R</kbd> | Search & Replace (All) |
 
-### 🤖 GitHub Copilot
+###  GitHub Copilot
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
 | <kbd>Ctrl</kbd> + <kbd>g</kbd> | `i` | Accept Suggestion |
 | <kbd>Ctrl</kbd> + <kbd>\</kbd> | `i` | Dismiss Suggestion |
 
-### ↕️ Line Moving
+###  Line Moving
 
 | Key | Action |
 | :--- | :--- |
@@ -139,7 +140,7 @@ If you prefer to install manually:
 
 ---
 
-## 📦 Included Plugins
+##  Included Plugins
 
 Zenvim comes pre-configured with these essential plugins:
 
@@ -151,7 +152,7 @@ Zenvim comes pre-configured with these essential plugins:
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! If you find a bug or want to add a feature, feel free to open an issue or submit a pull request.
 
