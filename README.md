@@ -17,12 +17,12 @@
 
 ---
 
-## ⚡ Introduction
+##  Introduction
 
 A powerful yet lightweight Neovim configuration optimized for coding on Termux
 
 
-### ✨ Key Features
+###  Key Features
 
 - ** Performance Optimized**: Fast startup time with lazy-loading plugins.
 - ** Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
