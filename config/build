@@ -1,0 +1,40 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -e
+
+cd "$HOME"
+
+echo "Updating package list and installing required packages..."
+pkg update -y
+pkg install -y clang git ripgrep gh fzf python nodejs neovim
+
+REPO_URL="https://github.com/nurmuhammedjoy/zenvim.git"
+REPO_DIR="zenvim"
+
+# Clone the repo if not already present
+if [ -d "$REPO_DIR" ]; then
+  echo "Repository $REPO_DIR already exists, removing..."
+  rm -rf "$REPO_DIR"
+fi
+
+echo "Cloning $REPO_URL..."
+git clone "$REPO_URL"
+
+NVIM_CONFIG_SRC="$REPO_DIR/config"
+NVIM_CONFIG_DEST="$HOME/.config/nvim"
+
+echo "Ensuring Neovim config directory exists..."
+mkdir -p "$NVIM_CONFIG_DEST"
+
+# Only copy if source exists and has files
+if [ -d "$NVIM_CONFIG_SRC" ] && [ "$(ls -A $NVIM_CONFIG_SRC)" ]; then
+  echo "Copying Neovim config files..."
+  cp -r $NVIM_CONFIG_SRC/* $NVIM_CONFIG_DEST/
+else
+  echo "Warning: No config files found in $NVIM_CONFIG_SRC."
+fi
+
+echo "Cleaning up cloned repository..."
+rm -rf "$REPO_DIR"
+
+echo "Setup complete. Launching Neovim..."
+nvim
