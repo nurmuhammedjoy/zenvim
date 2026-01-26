@@ -59,10 +59,11 @@ Make a backup of your current Neovim files:
 mv ~/.config/nvim{,.bak}
 ```
 
-Download the config: 
+Then, run the following command to install Zenvim:
+
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/refs/heads/main/config/init.lua -o ~/.config/nvim/init.lua
+curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/refs/heads/main/build | sh
 ```
 
 ---
