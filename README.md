@@ -24,17 +24,17 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 
 ###  Key Features
 
-- ** Performance Optimized**: Fast startup time with lazy-loading plugins.
-- ** Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
-- ** Intelligent Coding**: 
+- **Performance Optimized**: Fast startup time with lazy-loading plugins.
+- **Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
+- **Intelligent Coding**: 
   - Full **LSP** support (HTML, CSS, TS, JSON, Emmet) via [`mason.nvim`](https://github.com/williamboman/mason.nvim).
   - Autocompletion with [`nvim-cmp`](https://github.com/hrsh7th/nvim-cmp).
   - AI assistance with **GitHub Copilot**.
-- ** Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
-- ** Enhanced Navigation**: 
+- **Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
+- **Enhanced Navigation**: 
   - [`nvim-tree`](https://github.com/nvim-tree/nvim-tree.lua) for file management.
   - [`telescope`](https://github.com/nvim-telescope/telescope.nvim) for fuzzy finding.
-- ** Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
+- **Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
 
 ---
 
