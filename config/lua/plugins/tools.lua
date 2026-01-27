@@ -87,5 +87,9 @@ return {
     config = function()
       require("nvim-surround").setup({})
     end
+  },
+  {
+    "FelipeLema/cmp-async-path",
+    dependencies = { "hrsh7th/nvim-cmp" },
   }
 }

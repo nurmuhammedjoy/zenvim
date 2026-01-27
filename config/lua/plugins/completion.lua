@@ -6,7 +6,7 @@ return {
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
+      "FelipeLema/cmp-async-path",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
       "rafamadriz/friendly-snippets",
@@ -37,15 +37,28 @@ return {
             luasnip.lsp_expand(args.body)
           end,
         },
+
         window = {
-          completion = cmp.config.window.bordered({
-            border = border("CmpBorder"),
-            winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
-          }),
-          documentation = cmp.config.window.bordered({
-            border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-          }),
+          completion = {
+            border = 'single',
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+            col_offset = -2, 
+            side_padding = 1,
+          },
+        documentation = {
+            border = 'single',
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+          },
         },
+
+      formatting = {
+        fields = { "abbr", "kind", "menu" },
+        format = function(entry, vim_item)
+          vim_item.abbr = " " .. vim_item.abbr .. " "
+          return vim_item
+        end,
+      },
+         
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -72,6 +85,7 @@ return {
               fallback()
             end
           end, { "i", "s" }),
+          
 
           ["<C-y>"] = cmp.mapping.confirm({ select = true }),
         }),
@@ -80,7 +94,7 @@ return {
           { name = "luasnip" },
         }, {
           { name = "buffer" },
-          { name = "path" },
+          { name = "async_path" },
         }),
         performance = {
           max_view_entries = 15,
