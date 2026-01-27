@@ -21,7 +21,7 @@ return {
         automatic_installation = true,
       })
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
       local servers = {
         html = {},
