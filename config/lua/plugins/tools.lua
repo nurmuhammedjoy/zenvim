@@ -45,12 +45,12 @@ return {
     "akinsho/toggleterm.nvim",
     version = "*",
     keys = {
-      { "<c-\\>", desc = "Toggle terminal" },
+      { "<C-t>", desc = "Toggle terminal" },
     },
     config = function()
       require("toggleterm").setup({
         size = 20,
-        open_mapping = [[<c-\>]],
+        open_mapping = [[<C-t>]],
         shade_terminals = true,
         shading_factor = 2,
         direction = "float",

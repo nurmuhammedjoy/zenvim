@@ -45,3 +45,4 @@ vim.api.nvim_set_keymap('n', '<leader>r', ':lua InteractiveSubstitute(true)<CR>'
 
 vim.api.nvim_set_keymap('n', '<leader>R', ':lua InteractiveSubstitute(false)<CR>', { noremap = true, silent = false })
 
+
