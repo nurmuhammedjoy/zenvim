@@ -19,10 +19,13 @@ require("lazy").setup({
   { import = "plugins.completion" },
   { import = "plugins.tools" },
 }, {
+  -- lazy's cache avoids re-processing specs on restart
   performance = {
     cache = { enabled = true },
+    -- let lazy manage the full runtimepath instead of merging
     reset_packpath = true,
     rtp = {
+      -- these ship with neovim but lazy handles loading for us
       disabled_plugins = {
         "gzip",
         "matchit",

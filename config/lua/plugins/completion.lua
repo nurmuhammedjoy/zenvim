@@ -17,20 +17,6 @@ return {
 
       require("luasnip.loaders.from_vscode").lazy_load()
 
-      local border = function(hl_name)
-        return {
-          { "╭", hl_name },
-          { "─", hl_name },
-          { "╮", hl_name },
-          { "│", hl_name },
-          { "╯", hl_name },
-          { "─", hl_name },
-          { "╰", hl_name },
-          { "│", hl_name },
-        }
-      end
-    
-
       cmp.setup({
         snippet = {
           expand = function(args)

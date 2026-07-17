@@ -1,9 +1,6 @@
--- Autocommands
-
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
--- General autocommands group
 local general = augroup("General", { clear = true })
 
 -- Restore cursor position on file open
@@ -25,7 +22,7 @@ autocmd("TextYankPost", {
   end,
 })
 
--- LSP diagnostic configuration
+-- round floating windows, always show source label
 vim.diagnostic.config({
   virtual_text = { prefix = "●" },
   signs = true,

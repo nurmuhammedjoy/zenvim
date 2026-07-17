@@ -1,56 +1,66 @@
 return {
   -- File explorer
   {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = "nvim-tree/nvim-web-devicons",
+    "echasnovski/mini.files",
+    version = "*",
     keys = {
-      { "<C-n>", ":NvimTreeToggle<CR>", desc = "Toggle NvimTree" },
-      { "<C-e>", ":NvimTreeToggle<CR>", desc = "Toggle file explorer" },
+      { "<C-n>", ":lua MiniFiles.open()<CR>", desc = "Toggle file explorer" },
+      { "<C-e>", ":lua MiniFiles.open()<CR>", desc = "Toggle file explorer" },
     },
     config = function()
-      local nvim_tree = require("nvim-tree")
-      local ui = vim.api.nvim_list_uis()[1]
-      local width = math.floor(ui.width * 0.85)
-      local height = math.floor(ui.height * 0.60)
-      local row = math.floor((ui.height - height) * 0.5)
-      local col = math.floor((ui.width - width) * 0.5)
+      require("mini.files").setup({
+        windows = {
+          preview = true,
+          width_preview = 40,
+        },
+        options = {
+          use_as_default_explorer = true,
+        },
+      })
 
-      nvim_tree.setup({
-        disable_netrw = true,
-        hijack_netrw = true,
-        update_cwd = true,
-        view = {
-          float = {
-            enable = true,
-            open_win_config = {
-              relative = "editor",
-              border = "rounded",
-              width = width,
-              height = height,
-              row = row,
-              col = col,
-            },
-          },
-        },
-        filters = {
-          dotfiles = false,
-          custom = { ".git", "node_modules", ".cache" },
-        },
-        renderer = {
-          icons = {
-            show = {
-              file = true,
-              folder = true,
-              folder_arrow = true,
-              git = true,
-            },
-          },
-        },
+      -- mini.files sets its own buffer mappings after the FileType event,
+      -- so we defer with vim.schedule to override them with desc-enriched ones
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "minifiles",
+        callback = function()
+          vim.schedule(function()
+            local map = function(lhs, rhs, desc)
+              vim.keymap.set("n", lhs, rhs, { buffer = true, desc = desc })
+            end
+
+            local function go_in(n)
+              for _ = 1, n do MiniFiles.go_in() end
+            end
+            local function go_in_close(n)
+              for _ = 1, n do MiniFiles.go_in({ close_on_file = true }) end
+            end
+            local function go_out(n)
+              for _ = 1, n do MiniFiles.go_out() end
+            end
+
+            map("q",  function() MiniFiles.close() end, "Close explorer")
+            map("l",  function() go_in(vim.v.count1) end, "Go into entry")
+            map("L",  function() go_in_close(vim.v.count1) end, "Go into entry & close")
+            map("h",  function() go_out(vim.v.count1) end, "Go out to parent")
+            map("H",  function() go_out(vim.v.count1) MiniFiles.trim_right() end, "Go out & trim right")
+            map("'",  function() MiniFiles.mark_goto() end, "Go to bookmark")
+            map("m",  function() MiniFiles.mark_set() end, "Set bookmark")
+            map("<BS>", function() MiniFiles.reset() end, "Reset view")
+            map("@",  function() MiniFiles.reveal_cwd() end, "Reveal cwd")
+            map("g?", function() MiniFiles.show_help() end, "Show help")
+            map("=",  function() MiniFiles.synchronize() end, "Synchronize view")
+            map("<",  function() MiniFiles.trim_left() end, "Trim left branch")
+            map(">",  function() MiniFiles.trim_right() end, "Trim right branch")
+
+            map("?", function()
+              require("which-key").show({ global = false, keys = "" })
+            end, "Show keymaps")
+          end)
+        end,
       })
     end,
   },
 
-  -- Fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.5",
@@ -79,7 +89,7 @@ return {
     end,
   },
 
-  -- Treesitter 
+  -- skip treesitter highlighting for files over 100 KB to avoid freezes
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
@@ -96,7 +106,7 @@ return {
         highlight = {
           enable = true,
           disable = function(lang, buf)
-            local max_filesize = 100 * 1024 -- 100 KB
+            local max_filesize = 100 * 1024
             local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
             if ok and stats and stats.size > max_filesize then
               return true
@@ -106,17 +116,32 @@ return {
       })
     end,
   },
-  -- Auto pairs
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = true,
   },
 
-  -- Comment plugin
   {
     "numToStr/Comment.nvim",
     event = { "BufReadPost", "BufNewFile" },
     config = true,
   },
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("which-key").setup({
+        preset = "helix",
+        delay = vim.o.timeoutlen,
+        icons = { group = "󰌌" },
+        spec = {
+          { "<leader>b", group = "Buffer" },
+          { "<leader>t", group = "Terminal" },
+        },
+      })
+    end,
+  },
+
 }

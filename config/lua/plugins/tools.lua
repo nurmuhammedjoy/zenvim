@@ -40,32 +40,47 @@ return {
     end,
   },
 
-  -- Terminal
+  -- bottom-split terminal with multiple named instances
   {
     "akinsho/toggleterm.nvim",
     version = "*",
     keys = {
-      { "<C-t>", desc = "Toggle terminal" },
+      { "<C-t>", desc = "Toggle terminal 1" },
+      { "<leader>t1", "<cmd>1ToggleTerm<CR>", desc = "Toggle terminal 1" },
+      { "<leader>t2", "<cmd>2ToggleTerm<CR>", desc = "Toggle terminal 2" },
+      { "<leader>t3", "<cmd>3ToggleTerm<CR>", desc = "Toggle terminal 3" },
     },
     config = function()
       require("toggleterm").setup({
-        size = 20,
+        size = 15,
         open_mapping = [[<C-t>]],
         shade_terminals = true,
         shading_factor = 2,
-        direction = "float",
-        float_opts = {
-          border = "curved",
-          width = function()
-            return math.floor(vim.o.columns * 0.85)
-          end,
-          height = function()
-            return math.floor(vim.o.lines * 0.6)
-          end,
-          winblend = 0,
-        },
+        direction = "horizontal",
         persist_size = false,
+          -- enter insert mode immediately when toggling the terminal open
+        start_in_insert = true,
       })
+      -- cycle between open terminal instances; escape to normal mode first
+      local term_keys = {
+        ["t"] = function()
+          local Term = require("toggleterm.terminal")
+          local terms = Term.get_all()
+          -- skip the current terminal so we actually cycle
+          local current = vim.api.nvim_get_current_win()
+          for _, t in ipairs(terms) do
+            if t:is_open() and t.window ~= current then
+              vim.api.nvim_set_current_win(t.window)
+              return
+            end
+          end
+          -- Fall back to terminal 1
+          vim.cmd("1ToggleTerm")
+        end,
+      }
+      for key, cb in pairs(term_keys) do
+        vim.keymap.set("n", key, cb, { buffer = true, desc = "Cycle terminals" })
+      end
     end,
   },
   {
@@ -86,10 +101,6 @@ return {
     version = "*",
     config = function()
       require("nvim-surround").setup({})
-    end
+    end,
   },
-  {
-    "FelipeLema/cmp-async-path",
-    dependencies = { "hrsh7th/nvim-cmp" },
-  }
 }

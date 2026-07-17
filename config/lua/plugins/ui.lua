@@ -33,11 +33,24 @@ return {
   },
 
   {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = {
+      { "<Tab>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next buffer" },
+      { "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev buffer" },
+    },
+    opts = {
+      options = {
+        mode = "buffers",
+        diagnostics = "nvim_lsp",
+        show_buffer_close_icons = false,
+        show_close_icon = false,
+      },
+    },
+  },
+  {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    dependencies = {
-      { "nvim-tree/nvim-web-devicons", lazy = true },
-    },
     config = function()
       require("lualine").setup({
         options = {
@@ -51,8 +64,9 @@ return {
             tabline = 1000,
             winbar = 1000,
           },
+          -- hide the statusline in file-tree buffers (redundant noise)
           disabled_filetypes = {
-            statusline = { "NvimTree", "neo-tree", "alpha" },
+            statusline = { "minifiles", "neo-tree" },
           },
         },
         sections = {
@@ -92,50 +106,7 @@ return {
   },
 
   {
-    "goolord/alpha-nvim",
-    event = "VimEnter",
-    config = function()
-      local alpha = require("alpha")
-      local dashboard = require("alpha.themes.dashboard")
-
-      dashboard.section.buttons.val = {
-        dashboard.button("e", "󰈔  New file", ":ene <BAR> startinsert <CR>"),
-        dashboard.button("f", "󰮗  Find file", function() require('telescope.builtin').find_files() end),
-        dashboard.button("r", "󰛔  Recent files", function() require('telescope.builtin').oldfiles() end),
-        dashboard.button("c", "󱁺  Config", ":e $MYVIMRC<CR>"),
-        dashboard.button("q", "󰈆  Quit", ":qa<CR>"),
-      }
-
-      for _, btn in ipairs(dashboard.section.buttons.val) do
-        btn.opts.hl = "AlphaButtons"
-        btn.opts.hl_shortcut = "AlphaShortcut"
-      end
-
-      dashboard.section.header.opts.hl = "AlphaHeader"
-      dashboard.section.buttons.opts.hl = "AlphaButtons"
-      dashboard.section.footer.opts.hl = "AlphaFooter"
-
-      dashboard.opts.layout = {
-        { type = "padding", val = 2 },
-        dashboard.section.header,
-        { type = "padding", val = 2 },
-        dashboard.section.buttons,
-        { type = "padding", val = 1 },
-        dashboard.section.footer,
-      }
-
-      alpha.setup(dashboard.opts)
-
-      vim.defer_fn(function()
-        local stats = require("lazy").stats()
-        dashboard.section.footer.val = "⚡ " .. stats.loaded .. " plugins loaded in " .. string.format("%.2f", stats.startuptime) .. "ms"
-        pcall(alpha.redraw)
-      end, 1)
-    end,
-  },
-
-{
-  "stevearc/dressing.nvim",
+    "stevearc/dressing.nvim",
   event = "VeryLazy",
   config = function()
     require("dressing").setup({
@@ -153,37 +124,14 @@ return {
   end,
 },
 
-{
-  "gelguy/wilder.nvim",
-  event = "CmdlineEnter",
-  disable = true,
-  config = function()
-    local wilder = require("wilder")
-    wilder.setup({ modes = { ":", "/", "?" } })
-
-    
-    wilder.set_option("renderer", wilder.popupmenu_renderer(
-      wilder.popupmenu_palette_theme({
-        border = "rounded",
-        max_height = "50%",
-        min_height = 0,
-        prompt_position = "top",
-        reverse = 0,
-        pumblend = 0,
-        highlighter = wilder.basic_highlighter(),
-        left = { " ", wilder.popupmenu_devicons() },
-        right = { " ", wilder.popupmenu_scrollbar() },
-        show_prompt = true,
-      })
-    ))
-
-    wilder.set_option("pipeline", {
-      wilder.branch(
-        wilder.cmdline_pipeline({ fuzzy = 1 }),
-        wilder.vim_search_pipeline()
-      ),
-    })
-  end,
-},
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "VeryLazy",
+    main = "ibl",
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = false },
+    },
+  },
 }
 
