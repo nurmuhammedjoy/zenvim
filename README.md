@@ -5,36 +5,29 @@
 </p>
 
 <p align="center">
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
   <a href="https://github.com/nurmuhammedjoy/zenvim"><img src="https://img.shields.io/github/last-commit/nurmuhammedjoy/zenvim?logo=github" alt="GitHub last commit"></a>
   <a href="https://termux.dev/"><img src="https://img.shields.io/badge/Termux-Android-green?logo=android" alt="Termux"></a>
   <a href="https://neovim.io/"><img src="https://img.shields.io/badge/Neovim-0.9+-57A143?logo=neovim" alt="Neovim"></a>
 </p>
 
 <p align="center">
-  <em>A powerful, lightweight, and modular Neovim configuration optimized for coding on Android via Termux.</em>
+  <em>A lightweight, modular Neovim configuration optimized for coding on Android via Termux.</em>
 </p>
 
 ---
 
-##  Introduction
+## Introduction
 
-A powerful yet lightweight Neovim configuration optimized for coding on Termux
+A lightweight Neovim configuration optimized for Termux with lazy-loading for fast startup, modern LSP support, and keybindings designed for mobile touch keyboards.
 
+### Key Features
 
-###  Key Features
-
-- **Performance Optimized**: Fast startup time with lazy-loading plugins.
-- **Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
-- **Intelligent Coding**: 
-  - Full **LSP** support (HTML, CSS, TS, JSON, Emmet) via [`mason.nvim`](https://github.com/williamboman/mason.nvim).
-  - Autocompletion with [`nvim-cmp`](https://github.com/hrsh7th/nvim-cmp).
-  - AI assistance with **GitHub Copilot**.
-- **Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
-- **Enhanced Navigation**: 
-  - [`nvim-tree`](https://github.com/nvim-tree/nvim-tree.lua) for file management.
-  - [`telescope`](https://github.com/nvim-telescope/telescope.nvim) for fuzzy finding.
-- **Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
+- **Fast Startup**: Lazy-loaded plugins via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
+- **Intelligent Coding**: Full LSP support (HTML, CSS, TS/JS, JSON, Emmet) via [`mason.nvim`](https://github.com/williamboman/mason.nvim), autocompletion with [`nvim-cmp`](https://github.com/hrsh7th/nvim-cmp), and AI assistance via GitHub Copilot.
+- **Beautiful UI**: Gruvbox theme (transparent), [`lualine`](https://github.com/nvim-lualine/lualine.nvim) statusline, [`bufferline`](https://github.com/akinsho/bufferline.nvim) tabs, and [`indent-blankline`](https://github.com/lukas-reineke/indent-blankline.nvim) guides.
+- **Navigation**: [`mini.files`](https://github.com/echasnovski/mini.files) file explorer, [`telescope`](https://github.com/nvim-telescope/telescope.nvim) fuzzy finder.
+- **Termux Friendly**: Keybindings avoid complex chords; installs all system deps (ripgrep, fzf, gh, etc.) automatically.
 
 ---
 
@@ -42,131 +35,145 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 
 <p align="center">
   <img src="preview/screenshot.jpg" alt="App Screenshot" width="1200"/>
-  <br>
-  <!-- Replace video.mp4 with a relative link if available in the repo -->
-  <!-- <video controls width="600"><source src="video.mp4" type="video/mp4"></video> -->
 </p>
 
 ---
 
-##  Installation
+## Installation
 
 ### Prerequisites
+
 - **Termux** app installed on Android.
-- **Neovim** (v0.9.0 or newer).
-- **Git** and **Curl**.
+- At least **1 GB** free storage (for Neovim, deps, and plugins).
 
 ### Automatic Install
-Run this single command in Termux to install Zenvim (existing `~/.config/nvim` is automatically backed up to `~/.config/nvim.bak`):
+
+Run this single command in Termux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | sh
 ```
 
-**Note:** The installer is designed for Termux on Android only. It will exit with an error if run on other platforms. To use a fork, set `REPO_URL` before running:
+The installer will:
+1. Update Termux packages and install dependencies: `clang`, `git`, `ripgrep`, `gh` (GitHub CLI), `fzf`, `python`, `nodejs`, `neovim`.
+2. Back up any existing `~/.config/nvim` to `~/.config/nvim.bak`.
+3. Clone and copy the configuration.
+4. On first `nvim` launch, lazy.nvim automatically installs all plugins.
 
-```bash
-REPO_URL=https://github.com/your-username/zenvim.git curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | sh
-```
+> **Note:** The installer only runs on Termux (Android). It exits with an error on other platforms. To use a fork, set `REPO_URL`:
+> ```bash
+> REPO_URL=https://github.com/your-username/zenvim.git curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | sh
+> ```
 
 ### Manual Install
-If you prefer to install manually:
 
-1. **Backup existing config:**
-   ```bash
-   mv ~/.config/nvim ~/.config/nvim.bak
-   ```
-2. **Clone the repository:**
-   ```bash
-   git clone https://github.com/nurmuhammedjoy/zenvim.git
-   ```
-3. **Move configuration files:**
-   ```bash
-   mkdir -p ~/.config/nvim
-   cp -r zenvim/config/* ~/.config/nvim/
-   ```
-4. **Clean up:**
-   ```bash
-   rm -rf zenvim
-   ```
+```bash
+mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
+git clone https://github.com/nurmuhammedjoy/zenvim.git /tmp/zenvim
+cp -r /tmp/zenvim/config ~/.config/nvim
+rm -rf /tmp/zenvim
+```
 
 ---
 
-##  Key Bindings
+## Key Bindings
 
-**Leader Key:** <kbd>Space</kbd>
+**Leader key:** <kbd>Space</kbd>
 
-###  General & File Management
+### General
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
 | <kbd>Ctrl</kbd> + <kbd>s</kbd> | `n/i` | Save file |
-| <kbd>Ctrl</kbd> + <kbd>q</kbd> | `n/i` | Quit Neovim |
-| <kbd>Ctrl</kbd> + <kbd>e</kbd> | `n` | Toggle File Explorer (NvimTree) |
+| <kbd>Ctrl</kbd> + <kbd>q</kbd> | `n/i` | Quit |
+| <kbd>Ctrl</kbd> + <kbd>n</kbd> / <kbd>Ctrl</kbd> + <kbd>e</kbd> | `n` | Toggle file explorer (mini.files) |
 | <kbd>Space</kbd> + <kbd>nh</kbd> | `n` | Clear search highlights |
-| <kbd>Space</kbd> + <kbd>bn</kbd> | `n` | Next Buffer |
-| <kbd>Space</kbd> + <kbd>bp</kbd> | `n` | Previous Buffer |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `n/t` | Toggle Terminal |
+| <kbd>Space</kbd> + <kbd>bn</kbd> | `n` | Next buffer |
+| <kbd>Space</kbd> + <kbd>bp</kbd> | `n` | Previous buffer |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> | `n` | Cycle buffer tabs |
 
-###  Search (Telescope)
+### File Explorer (mini.files)
+
+| Key | Action |
+| :--- | :--- |
+| <kbd>l</kbd> | Open entry |
+| <kbd>L</kbd> | Open entry & close explorer |
+| <kbd>h</kbd> | Go to parent |
+| <kbd>H</kbd> | Go to parent & trim right |
+| <kbd>m</kbd> | Set bookmark |
+| <kbd>'</kbd> | Go to bookmark |
+| <kbd>=</kbd> | Synchronize view |
+| <kbd>g?</kbd> | Show help |
+
+### Search (Telescope)
 
 | Key | Action |
 | :--- | :--- |
 | <kbd>Space</kbd> + <kbd>ff</kbd> | Find files |
-| <kbd>Space</kbd> + <kbd>fg</kbd> | Live Grep (search text in files) |
-| <kbd>Space</kbd> + <kbd>fb</kbd> | Find open buffers |
-| <kbd>Space</kbd> + <kbd>fo</kbd> | Recent files (Oldfiles) |
+| <kbd>Space</kbd> + <kbd>fg</kbd> | Live grep |
+| <kbd>Space</kbd> + <kbd>fb</kbd> | Open buffers |
+| <kbd>Space</kbd> + <kbd>fo</kbd> | Recent files |
 
-###  LSP & Coding
+### LSP & Coding
 
 | Key | Action |
 | :--- | :--- |
-| <kbd>gd</kbd> | Go to Definition |
-| <kbd>gr</kbd> | Go to References |
-| <kbd>K</kbd> | Show Hover Documentation |
-| <kbd>Space</kbd> + <kbd>rn</kbd> | Rename Symbol |
-| <kbd>Space</kbd> + <kbd>ca</kbd> | Code Actions |
-| <kbd>Space</kbd> + <kbd>f</kbd> | Format File |
-| <kbd>Space</kbd> + <kbd>r</kbd> | Search & Replace (Confirm) |
-| <kbd>Space</kbd> + <kbd>R</kbd> | Search & Replace (All) |
+| <kbd>gd</kbd> | Go to definition |
+| <kbd>gr</kbd> | Go to references |
+| <kbd>K</kbd> | Hover documentation |
+| <kbd>Space</kbd> + <kbd>rn</kbd> | Rename symbol |
+| <kbd>Space</kbd> + <kbd>ca</kbd> | Code actions |
+| <kbd>Space</kbd> + <kbd>f</kbd> | Format file |
+| <kbd>Space</kbd> + <kbd>r</kbd> | Search & replace (confirm) |
+| <kbd>Space</kbd> + <kbd>R</kbd> | Search & replace (all) |
 
-###  GitHub Copilot
+### GitHub Copilot
 
 | Key | Mode | Action |
 | :--- | :---: | :--- |
-| <kbd>Ctrl</kbd> + <kbd>g</kbd> | `i` | Accept Suggestion |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `i` | Dismiss Suggestion |
+| <kbd>Ctrl</kbd> + <kbd>g</kbd> | `i` | Accept suggestion |
+| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `i` | Dismiss suggestion |
 
-###  Line Moving
+### Terminal
 
 | Key | Action |
 | :--- | :--- |
-| <kbd>Ctrl</kbd> + <kbd>⬆️⬇️</kbd> | Move line up/down |
-| <kbd>Ctrl</kbd> + <kbd>⬅️➡️</kbd> | Move selection left/right |
+| <kbd>Ctrl</kbd> + <kbd>t</kbd> | Toggle terminal 1 |
+| <kbd>Space</kbd> + <kbd>t1</kbd> | Toggle terminal 1 |
+| <kbd>Space</kbd> + <kbd>t2</kbd> | Toggle terminal 2 |
+| <kbd>Space</kbd> + <kbd>t3</kbd> | Toggle terminal 3 |
+
+### Line Moving
+
+| Key | Mode | Action |
+| :--- | :---: | :--- |
+| <kbd>Ctrl</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd> | `n/v` | Move line/selection up/down |
+| <kbd>Ctrl</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | `n/v` | Move line/selection left/right |
 
 ---
 
-##  Included Plugins
+## Included Plugins
 
-Zenvim comes pre-configured with these essential plugins:
+| Category | Plugins |
+| :--- | :--- |
+| **Core** | `lazy.nvim`, `plenary.nvim` |
+| **UI** | `gruvbox.nvim` (transparent theme), `lualine.nvim` (statusline), `bufferline.nvim` (tabs), `dressing.nvim` (better prompts), `indent-blankline.nvim` (guides), `nvim-web-devicons` |
+| **Editor** | `mini.files` (explorer), `telescope.nvim` (finder), `nvim-treesitter` (syntax), `nvim-autopairs`, `Comment.nvim`, `which-key.nvim`, `nvim-surround`, `mini.move` |
+| **LSP & Completion** | `nvim-lspconfig`, `mason.nvim`, `mason-lspconfig.nvim`, `nvim-cmp`, `cmp-nvim-lsp`, `cmp-buffer`, `cmp-async-path`, `LuaSnip`, `cmp_luasnip`, `friendly-snippets` |
+| **Tools** | `copilot.vim` (AI), `toggleterm.nvim` (terminal) |
 
-- **Core**: `lazy.nvim`, `plenary.nvim`
-- **UI**: `gruvbox.nvim` (Theme), `lualine.nvim` (Status), `alpha-nvim` (Dashboard), `nvim-web-devicons`
-- **Editor**: `nvim-tree.lua` (Explorer), `telescope.nvim` (Finder), `nvim-treesitter` (Syntax), `mini.move` (Line moving), `nvim-surround`
-- **LSP & Completion**: `nvim-lspconfig`, `mason.nvim`, `nvim-cmp`, `LuaSnip`
-- **Tools**: `copilot.vim` (AI), `toggleterm.nvim` (Terminal)
+**LSP servers installed automatically:** `html`, `cssls`, `ts_ls`, `jsonls`, `emmet_ls`.
 
 ---
 
-##  Contributing
+## Contributing
 
-Contributions are welcome! If you find a bug or want to add a feature, feel free to open an issue or submit a pull request.
+Contributions welcome! Open an issue or submit a pull request.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes
+4. Push and open a PR
 
 ---
 
