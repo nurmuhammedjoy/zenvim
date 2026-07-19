@@ -10,7 +10,8 @@ keymap("v", "d", '"_d', base_opts) -- delete without yanking (visual)
 keymap("v", "x", '"+y', { noremap = true, silent = true })
 
 keymap({ "n", "i" }, "<C-s>", "<cmd>w<CR>", opts("Save file"))
-keymap({ "n", "i" }, "<C-q>", "<cmd>q<CR>", opts("Quit Neovim"))
+keymap({ "n", "i" }, "<C-q>", "<cmd>wq<CR>", opts("Save and quit"))
+keymap("n", "<Esc><Esc>", "<cmd>q!<CR>", opts("Force quit"))
 
 
 keymap("n", "<leader>bn", "<cmd>bnext<CR>", opts("Next buffer"))

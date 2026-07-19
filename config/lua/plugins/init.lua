@@ -19,6 +19,7 @@ require("lazy").setup({
   { import = "plugins.completion" },
   { import = "plugins.tools" },
 }, {
+  change_detection = { notify = false },
   -- lazy's cache avoids re-processing specs on restart
   performance = {
     cache = { enabled = true },

@@ -63,4 +63,13 @@ api.nvim_create_autocmd("VimEnter", {
   end,
 })
 
+api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.api.nvim_set_hl(0, "WildMenu", { bg = "#3c3836", fg = "#ebdbb2", bold = true })
+    vim.api.nvim_set_hl(0, "Pmenu", { bg = "#282828", fg = "#ebdbb2" })
+    vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#3c3836", fg = "#ebdbb2", bold = true })
+    vim.api.nvim_set_hl(0, "PmenuBorder", { fg = "#d5c4a1", bold = true })
+  end,
+})
+
 

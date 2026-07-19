@@ -38,6 +38,7 @@ return {
               for _ = 1, n do MiniFiles.go_out() end
             end
 
+            map("<CR>",  function() go_in(vim.v.count1) end, "Open file/dir")
             map("q",  function() MiniFiles.close() end, "Close explorer")
             map("l",  function() go_in(vim.v.count1) end, "Go into entry")
             map("L",  function() go_in_close(vim.v.count1) end, "Go into entry & close")
