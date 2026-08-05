@@ -64,11 +64,7 @@ Run this single command in Termux to install Zenvim (existing `~/.config/nvim` i
 curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | bash
 ```
 
-**Note:** The installer is designed for Termux on Android only. It will exit with an error if run on other platforms. To use a fork, set `REPO_URL` before running:
-
-```bash
-REPO_URL=https://github.com/your-username/zenvim.git curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | sh
-```
+**Note:** The installer is designed for Termux on Android only.
 
 ### Manual Install
 If you prefer to install manually:
