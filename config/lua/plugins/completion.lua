@@ -118,7 +118,7 @@ return {
         sources = cmp.config.sources({
           { name = "cmdline" },
         }, {
-          { name = "path" },
+          { name = "async_path" },
         }),
         window = { completion = window_opts },
       })

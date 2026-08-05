@@ -22,25 +22,15 @@ keymap("n", "<leader>fo", "<cmd>lua require('telescope.builtin').oldfiles()<CR>"
 keymap("n", "<leader>nh", "<cmd>nohlsearch<CR>", opts("Clear search highlights"))
 
 
-keymap("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
-keymap("n", "gr", vim.lsp.buf.references, opts("Go to references"))
-keymap("n", "K", vim.lsp.buf.hover, opts("Hover documentation"))
-keymap("n", "<leader>rn", vim.lsp.buf.rename, opts("Rename symbol"))
-keymap("n", "<leader>ca", vim.lsp.buf.code_action, opts("Code actions"))
-keymap("n", "<leader>f", function()
-  vim.lsp.buf.format { async = true }
-end, opts("Format buffer"))
-
-
 function InteractiveSubstitute(confirm)
   local old = vim.fn.input("Old: ")
   if old == "" then return end
   local new = vim.fn.input("New: ")
   if new == "" then return end
   local flags = confirm and "gc" or "g"
-  -- Escape regex and separator characters to avoid breaking :s
-  local escaped_old = vim.pesc(old)
-  vim.cmd(string.format("%%s/%s/%s/%s", escaped_old, new, flags))
+  local escaped_old = vim.fn.escape(old, [[\/.*$^~[]])
+  local escaped_new = vim.fn.escape(new, [[\/&~]])
+  vim.cmd(string.format("%%s/%s/%s/%s", escaped_old, escaped_new, flags))
 end
 
 vim.keymap.set("n", "<leader>r", function()
@@ -50,5 +40,4 @@ end, { desc = "Substitute in buffer (with confirmation)" })
 vim.keymap.set("n", "<leader>R", function()
   InteractiveSubstitute(false)
 end, { desc = "Substitute in buffer (no confirmation)" })
-
 

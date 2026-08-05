@@ -59,7 +59,6 @@ api.nvim_create_autocmd("VimEnter", {
   callback = function()
     opt.wrap = true
     opt.linebreak = true
-    vim.opt.signcolumn = "no"
   end,
 })
 
@@ -71,5 +70,4 @@ api.nvim_create_autocmd("ColorScheme", {
     vim.api.nvim_set_hl(0, "PmenuBorder", { fg = "#d5c4a1", bold = true })
   end,
 })
-
 

@@ -25,19 +25,14 @@ return {
         vim.lsp.protocol.make_client_capabilities()
       )
 
-      -- Apply capabilities as a global default for all LSP servers.
-      -- Per-server overrides can still be set below; they will be merged
-      -- on top of the defaults loaded from lspconfig's lsp/*.lua files.
+      -- Global default for all servers; lspconfig's lsp/*.lua defaults and
+      -- per-server configs below are merged on top of this.
       vim.lsp.config("*", { capabilities = capabilities })
 
-      -- Per-server overrides (filetypes, settings, etc.)
       vim.lsp.config("emmet_ls", {
         filetypes = { "html", "css", "scss", "javascript", "typescript", "vue" },
       })
 
-      -- Enable all desired language servers.
-      -- lspconfig's lsp/<name>.lua provides defaults (cmd, filetypes, root_markers)
-      -- which are merged with the global "*" config and per-server overrides above.
       local servers = { "html", "cssls", "ts_ls", "jsonls", "emmet_ls" }
       for _, server_name in ipairs(servers) do
         vim.lsp.enable(server_name)

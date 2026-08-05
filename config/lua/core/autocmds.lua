@@ -14,7 +14,6 @@ autocmd("BufReadPost", {
   end,
 })
 
--- Highlight on yank
 autocmd("TextYankPost", {
   group = general,
   callback = function()
@@ -22,7 +21,32 @@ autocmd("TextYankPost", {
   end,
 })
 
--- round floating windows, always show source label
+-- Keep LSP actions available only where a language server is attached.
+autocmd("LspAttach", {
+  group = general,
+  callback = function(event)
+    local buffer_opts = { buffer = event.buf, silent = true }
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", buffer_opts, {
+      desc = "Go to definition",
+    }))
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", buffer_opts, {
+      desc = "Go to references",
+    }))
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", buffer_opts, {
+      desc = "Hover documentation",
+    }))
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", buffer_opts, {
+      desc = "Rename symbol",
+    }))
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", buffer_opts, {
+      desc = "Code actions",
+    }))
+    vim.keymap.set("n", "<leader>f", function()
+      vim.lsp.buf.format({ async = true })
+    end, vim.tbl_extend("force", buffer_opts, { desc = "Format buffer" }))
+  end,
+})
+
 vim.diagnostic.config({
   virtual_text = { prefix = "●" },
   signs = true,

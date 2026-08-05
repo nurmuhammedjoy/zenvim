@@ -1,5 +1,4 @@
 return {
-  -- File explorer
   {
     "echasnovski/mini.files",
     version = "*",
