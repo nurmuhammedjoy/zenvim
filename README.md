@@ -60,7 +60,7 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 Run this single command in Termux to install Zenvim (existing `~/.config/nvim` is automatically backed up to `~/.config/nvim.bak`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | sh
+curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | bash
 ```
 
 **Note:** The installer is designed for Termux on Android only. It will exit with an error if run on other platforms. To use a fork, set `REPO_URL` before running:
