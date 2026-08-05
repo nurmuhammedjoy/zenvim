@@ -41,7 +41,8 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 ## Preview
 
 <p align="center">
-  <img src="preview/screenshot.jpg" alt="App Screenshot" width="1200"/>
+  <img src="preview/IMG_20260806_031330.jpg" alt="App Screenshot" width="1200"/>
+  <img src="preview/IMG_20260806_030826.jpg" alt="App Screenshot" width="1200"/>
   <br>
   <!-- Replace video.mp4 with a relative link if available in the repo -->
   <!-- <video controls width="600"><source src="video.mp4" type="video/mp4"></video> -->
