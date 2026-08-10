@@ -62,9 +62,10 @@ autocmd("LspAttach", {
 })
 
 vim.diagnostic.config({
-  virtual_text = { prefix = "●" },
-  signs = true,
-  underline = true,
+  -- inline diagnostics fully off: they are the main scroll-lag source on Termux
+  signs = false,
+  virtual_text = false,
+  underline = false,
   update_in_insert = false,
   severity_sort = true,
   float = {
@@ -72,3 +73,18 @@ vim.diagnostic.config({
     source = "always",
   },
 })
+
+-- manual access to diagnostics while inline rendering is off
+local diagnostics_enabled = false
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show current diagnostic" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "<leader>uD", function()
+  diagnostics_enabled = not diagnostics_enabled
+  vim.diagnostic.config({
+    virtual_text = diagnostics_enabled,
+    underline = diagnostics_enabled,
+    signs = diagnostics_enabled,
+  })
+  vim.notify("Diagnostics " .. (diagnostics_enabled and "on" or "off"))
+end, { desc = "Toggle inline diagnostics" })

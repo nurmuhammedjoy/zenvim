@@ -33,8 +33,6 @@ opt.softtabstop = 2
 opt.smartindent = true
 opt.cmdheight = 0
 
-
-
 opt.swapfile = false
 opt.backup = false
 opt.undofile = true
@@ -44,6 +42,8 @@ opt.incsearch = true
 opt.hlsearch = true
 opt.ignorecase = true
 opt.smartcase = true
+-- Disable ShaDa persistence (command/search history, marks, registers, etc.)
+vim.opt.shada = ""
 
 opt.wildmenu = true
 opt.wildmode = "longest:full,full"

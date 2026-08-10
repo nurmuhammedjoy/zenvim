@@ -3,8 +3,8 @@ return {
     "Saghen/blink.cmp",
 
     version = "1.10.2",
-    -- loaded at startup so lspconfig can call get_lsp_capabilities() reliably
-    lazy = false,
+    -- loaded on insert so startup stays fast on Termux
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",

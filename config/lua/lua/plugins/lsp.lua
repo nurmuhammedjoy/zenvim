@@ -3,6 +3,8 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
+      -- blink is lazy-loaded; forced as a dep so it's ready for get_lsp_capabilities()
+      "Saghen/blink.cmp",
       "mason-org/mason.nvim",
       "mason-org/mason-lspconfig.nvim",
     },
