@@ -95,23 +95,19 @@ return {
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
-      local status_ok, configs = pcall(require, "nvim-treesitter.configs")
-      if not status_ok then
-        return
-      end
+      require("nvim-treesitter").setup()
+      require("nvim-treesitter").install({ "lua", "bash", "python", "json", "html", "css", "vim", "vimdoc" })
 
-      configs.setup({
-        ensure_installed = { "lua", "bash", "python", "json", "html", "css", "vim", "vimdoc" },
-        highlight = {
-          enable = true,
-          disable = function(lang, buf)
-            local max_filesize = 100 * 1024
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-              return true
-            end
-          end,
-        },
+      -- skip treesitter highlighting for files over 100 KB to avoid freezes
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          local max_filesize = 100 * 1024
+          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(args.buf))
+          if ok and stats and stats.size > max_filesize then
+            return
+          end
+          pcall(vim.treesitter.start, args.buf)
+        end,
       })
     end,
   },
