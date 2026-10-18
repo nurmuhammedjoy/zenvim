@@ -4,8 +4,8 @@ return {
     version = "*",
     lazy = false,
     keys = {
-      { "<C-n>", ":lua MiniFiles.open()<CR>", desc = "Toggle file explorer" },
-      { "<C-e>", ":lua MiniFiles.open()<CR>", desc = "Toggle file explorer" },
+      { "<C-n>", ":lua MiniFiles.open(MiniFiles.get_latest_path())<CR>", desc = "Toggle file explorer" },
+      { "<C-e>", ":lua MiniFiles.open(MiniFiles.get_latest_path())<CR>", desc = "Toggle file explorer" },
     },
     config = function()
       require("mini.files").setup({
@@ -124,20 +124,5 @@ return {
     config = true,
   },
 
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("which-key").setup({
-        preset = "helix",
-        delay = vim.o.timeoutlen,
-        icons = { group = "󰌌" },
-        spec = {
-          { "<leader>b", group = "Buffer" },
-          { "<leader>t", group = "Terminal" },
-        },
-      })
-    end,
-  },
 
 }

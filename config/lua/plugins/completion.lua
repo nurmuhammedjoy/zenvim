@@ -12,20 +12,28 @@ return {
     config = function()
       require("luasnip.loaders.from_vscode").lazy_load()
 
-      -- Gruvbox-tinted highlights for the blink.cmp groups
-      vim.api.nvim_set_hl(0, "BlinkCmpMenu", { bg = "#1c2021", fg = "#ebdbb2" })
-      vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { bg = "#1c2021", fg = "#d5c4a1", bold = true })
+      -- Completion popup background/opacity.
+      -- Transparent by default so the popup matches a transparent terminal
+      -- (kitty `background_opacity`, Termux). To change it:
+      --   popup_bg = "#1c2021", blend = 0 -> fully opaque
+      --   popup_bg = "#1c2021", blend = 20 -> semi-transparent
+      local popup_bg = "NONE"
+      local blend = 0
+
+      vim.api.nvim_set_hl(0, "BlinkCmpMenu", { bg = popup_bg, fg = "#ebdbb2" })
+      vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { bg = popup_bg, fg = "#d5c4a1", bold = true })
       vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { bg = "#504945", fg = "#ebdbb2", bold = true })
-      vim.api.nvim_set_hl(0, "BlinkCmpScrollBarThumb", { bg = "#504945" })
-      vim.api.nvim_set_hl(0, "BlinkCmpScrollBarGutter", { bg = "#1c2021" })
       vim.api.nvim_set_hl(0, "BlinkCmpKind", { fg = "#83a598" })
       vim.api.nvim_set_hl(0, "BlinkCmpLabel", { fg = "#ebdbb2" })
       vim.api.nvim_set_hl(0, "BlinkCmpLabelMatch", { fg = "#fe8019", bold = true })
       vim.api.nvim_set_hl(0, "BlinkCmpLabelDetail", { fg = "#928374", italic = true })
       vim.api.nvim_set_hl(0, "BlinkCmpLabelDescription", { fg = "#a89984", italic = true })
       vim.api.nvim_set_hl(0, "BlinkCmpSource", { fg = "#a89984", bold = true })
-      vim.api.nvim_set_hl(0, "BlinkCmpDoc", { bg = "#1c2021", fg = "#ebdbb2" })
-      vim.api.nvim_set_hl(0, "BlinkCmpDocBorder", { bg = "#1c2021", fg = "#d5c4a1", bold = true })
+      vim.api.nvim_set_hl(0, "BlinkCmpDoc", { bg = popup_bg, fg = "#ebdbb2" })
+      vim.api.nvim_set_hl(0, "BlinkCmpDocBorder", { bg = popup_bg, fg = "#d5c4a1", bold = true })
+      -- generic fallbacks for the cmdline popup and any non-blink popups
+      vim.api.nvim_set_hl(0, "Pmenu", { bg = popup_bg, fg = "#ebdbb2" })
+      vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#504945", fg = "#ebdbb2", bold = true })
 
 
       local function border(hl_name)
@@ -94,6 +102,7 @@ return {
             border = "single",
             max_height = 15,
             scrollbar = false,
+            winblend = blend,
           },
 
           documentation = {
@@ -102,6 +111,7 @@ return {
             window = {
               border = border("BlinkCmpDocBorder"),
               max_width = 60,
+              winblend = blend,
             },
           },
 
