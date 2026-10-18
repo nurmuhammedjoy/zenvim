@@ -11,7 +11,7 @@ cd "$HOME"
 
 echo "Updating package list and installing required packages..."
 pkg update -y
-pkg install -y clang git ripgrep gh fzf python nodejs neovim
+pkg install -y clang git ripgrep gh fzf python nodejs neovim lua-language-server
 
 for cmd in git nvim; do
   if ! command -v "$cmd" &>/dev/null; then
@@ -49,7 +49,34 @@ else
   echo "Warning: No config files found in $NVIM_CONFIG_SRC."
 fi
 
+echo "Pre-installing plugins and language servers (this may take several minutes)..."
+
+nvim --headless "+Lazy! sync" "+qa!" >/dev/null 2>&1 \
+  || echo "Warning: plugin sync failed. lazy.nvim will retry on first launch."
+
+nvim --headless -c 'lua
+  local names = { "html-lsp", "css-lsp", "typescript-language-server", "json-lsp", "emmet-ls", "bash-language-server" }
+  require("mason").setup()
+  local registry = require("mason-registry")
+  registry.refresh(function()
+    for _, name in ipairs(names) do
+      local ok, pkg = pcall(registry.get_package, name)
+      if ok and not pkg:is_installed() then pkg:install({}) end
+    end
+  end)
+  vim.wait(600000, function()
+    for _, name in ipairs(names) do
+      local ok, pkg = pcall(registry.get_package, name)
+      if not ok or not pkg:is_installed() then return false end
+    end
+    return true
+  end, 2000)
+' "+qa!" >/dev/null 2>&1 \
+  || echo "Warning: language server pre-install failed. Open Neovim and run :Mason."
+
 echo "Cleaning up cloned repository..."
 rm -rf "$REPO_DIR"
 
 echo "Setup complete. Run 'nvim' to start Neovim."
+
+echo "Note: plugins and (via Mason) the language servers are fetched on first start, so it needs internet access and can take a few minutes. Later launches are fast. If a server is missing, run `:Mason` to install it manually."

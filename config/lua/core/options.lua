@@ -33,6 +33,12 @@ opt.softtabstop = 2
 opt.smartindent = true
 opt.cmdheight = 0
 
+-- cmdheight=0 leaves no room for messages, so without this every notification
+-- (mason installing servers, treesitter, ...) would block on "Press ENTER".
+if vim.fn.exists("+messagesopt") == 1 then
+  opt.mopt = "wait:0,history:500,progress:c"
+end
+
 opt.swapfile = false
 opt.backup = false
 opt.undofile = true

@@ -8,7 +8,7 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://github.com/nurmuhammedjoy/zenvim"><img src="https://img.shields.io/github/last-commit/nurmuhammedjoy/zenvim?logo=github" alt="GitHub last commit"></a>
   <a href="https://termux.dev/"><img src="https://img.shields.io/badge/Termux-Android-green?logo=android" alt="Termux"></a>
-  <a href="https://neovim.io/"><img src="https://img.shields.io/badge/Neovim-0.9+-57A143?logo=neovim" alt="Neovim"></a>
+  <a href="https://neovim.io/"><img src="https://img.shields.io/badge/Neovim-0.11%2B-57A143?logo=neovim" alt="Neovim 0.11+"></a>
 </p>
 
 <p align="center">
@@ -27,12 +27,11 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 - **Performance Optimized**: Fast startup time with lazy-loading plugins.
 - **Modern Package Management**: Powered by [`lazy.nvim`](https://github.com/folke/lazy.nvim) for automatic updates and management.
 - **Intelligent Coding**: 
-  - Full **LSP** support (HTML, CSS, TS, JSON, Emmet) via [`mason.nvim`](https://github.com/williamboman/mason.nvim).
-  - Autocompletion with [`nvim-cmp`](https://github.com/hrsh7th/nvim-cmp).
-  - AI assistance with **GitHub Copilot**.
-- **Beautiful UI**: Gruvbox theme (transparent), custom dashboard, and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
+  - **LSP** support (HTML, CSS, TS, JSON, Emmet, Bash) via [`mason.nvim`](https://github.com/williamboman/mason.nvim); `clangd` and `lua_ls` are picked up from `$PATH`.
+  - Autocompletion with [`blink.cmp`](https://github.com/Saghen/blink.cmp) and LuaSnip snippets.
+- **Beautiful UI**: Gruvbox theme (transparent) and sleek [`lualine`](https://github.com/nvim-lualine/lualine.nvim).
 - **Enhanced Navigation**: 
-  - [`nvim-tree`](https://github.com/nvim-tree/nvim-tree.lua) for file management.
+  - [`mini.files`](https://github.com/echasnovski/mini.files) for file management.
   - [`telescope`](https://github.com/nvim-telescope/telescope.nvim) for fuzzy finding.
 - **Termux Friendly**: Keybindings designed for touch keyboards and mobile constraints.
 
@@ -44,8 +43,6 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
   <img src="preview/IMG_20260806_031330.jpg" alt="App Screenshot" width="1200"/>
   <img src="preview/IMG_20260806_030826.jpg" alt="App Screenshot" width="1200"/>
   <br>
-  <!-- Replace video.mp4 with a relative link if available in the repo -->
-  <!-- <video controls width="600"><source src="video.mp4" type="video/mp4"></video> -->
 </p>
 
 ---
@@ -54,7 +51,7 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 
 ### Prerequisites
 - **Termux** app installed on Android.
-- **Neovim** (v0.9.0 or newer).
+- **Neovim** (v0.11.0 or newer — the config uses the native `vim.lsp.config` / `vim.lsp.enable` API).
 - **Git** and **Curl**.
 
 ### Automatic Install
@@ -65,6 +62,8 @@ curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | 
 ```
 
 **Note:** The installer is designed for Termux on Android only.
+
+**First launch:** plugins and (via Mason) the language servers are fetched on first start, so it needs internet access and can take a few minutes. Later launches are fast. If a server is missing, run `:Mason` to install it manually.
 
 ### Manual Install
 If you prefer to install manually:
@@ -99,11 +98,12 @@ If you prefer to install manually:
 | :--- | :---: | :--- |
 | <kbd>Ctrl</kbd> + <kbd>s</kbd> | `n/i` | Save file |
 | <kbd>Ctrl</kbd> + <kbd>q</kbd> | `n/i` | Quit Neovim |
-| <kbd>Ctrl</kbd> + <kbd>e</kbd> | `n` | Toggle File Explorer (NvimTree) |
+| <kbd>Ctrl</kbd> + <kbd>e</kbd> or <kbd>Ctrl</kbd> + <kbd>n</kbd> | `n` | Toggle file explorer (mini.files) |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> | `n` | Next / previous buffer |
 | <kbd>Space</kbd> + <kbd>nh</kbd> | `n` | Clear search highlights |
-| <kbd>Space</kbd> + <kbd>bn</kbd> | `n` | Next Buffer |
-| <kbd>Space</kbd> + <kbd>bp</kbd> | `n` | Previous Buffer |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `n/t` | Toggle Terminal |
+| <kbd>Space</kbd> + <kbd>bn</kbd> | `n` | Next buffer |
+| <kbd>Space</kbd> + <kbd>bp</kbd> | `n` | Previous buffer |
+| <kbd>Ctrl</kbd> + <kbd>t</kbd> | `n/t` | Toggle terminal |
 
 ###  Search (Telescope)
 
@@ -127,19 +127,12 @@ If you prefer to install manually:
 | <kbd>Space</kbd> + <kbd>r</kbd> | Search & Replace (Confirm) |
 | <kbd>Space</kbd> + <kbd>R</kbd> | Search & Replace (All) |
 
-###  GitHub Copilot
-
-| Key | Mode | Action |
-| :--- | :---: | :--- |
-| <kbd>Ctrl</kbd> + <kbd>g</kbd> | `i` | Accept Suggestion |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> | `i` | Dismiss Suggestion |
-
 ###  Line Moving
 
 | Key | Action |
 | :--- | :--- |
-| <kbd>Ctrl</kbd> + <kbd>⬆️⬇️</kbd> | Move line up/down |
-| <kbd>Ctrl</kbd> + <kbd>⬅️➡️</kbd> | Move selection left/right |
+| <kbd>Alt</kbd> + <kbd>h</kbd> / <kbd>Alt</kbd> + <kbd>l</kbd> | Move line/selection left/right |
+| <kbd>Alt</kbd> + <kbd>j</kbd> / <kbd>Alt</kbd> + <kbd>k</kbd> | Move line/selection down/up |
 
 ---
 
@@ -148,10 +141,10 @@ If you prefer to install manually:
 Zenvim comes pre-configured with these essential plugins:
 
 - **Core**: `lazy.nvim`, `plenary.nvim`
-- **UI**: `gruvbox.nvim` (Theme), `lualine.nvim` (Status), `alpha-nvim` (Dashboard), `nvim-web-devicons`
-- **Editor**: `nvim-tree.lua` (Explorer), `telescope.nvim` (Finder), `nvim-treesitter` (Syntax), `mini.move` (Line moving), `nvim-surround`
-- **LSP & Completion**: `nvim-lspconfig`, `mason.nvim`, `nvim-cmp`, `LuaSnip`
-- **Tools**: `copilot.vim` (AI), `toggleterm.nvim` (Terminal)
+- **UI**: `gruvbox.nvim` (theme), `lualine.nvim` (status), `bufferline.nvim` (buffer tabs), `dressing.nvim` (input/select), `indent-blankline.nvim` (indent guides), `which-key.nvim` (key hints)
+- **Editor**: `mini.files` (explorer), `telescope.nvim` (finder), `nvim-treesitter` (syntax), `nvim-autopairs`, `Comment.nvim`, `nvim-surround`, `mini.move` (line moving)
+- **LSP & Completion**: `nvim-lspconfig`, `mason.nvim`, `mason-lspconfig.nvim`, `blink.cmp`, `LuaSnip`, `friendly-snippets`
+- **Tools**: `toggleterm.nvim` (terminal)
 
 ---
 

@@ -23,7 +23,6 @@ return {
           "emmet_ls",
           "bashls",
         },
-        automatic_installation = true,
       })
 
 
@@ -37,7 +36,16 @@ return {
         filetypes = { "html", "css", "scss", "vue" },
       })
 
-      local servers = { "html", "cssls", "ts_ls", "jsonls", "emmet_ls", "bashls", "clangd", "lua_ls" }
+      -- clangd and lua_ls come from $PATH (pkg), not Mason; skip them if the
+      -- binary is missing so startup doesn't log "check log for errors".
+      local servers = { "html", "cssls", "ts_ls", "jsonls", "emmet_ls", "bashls" }
+      if vim.fn.executable("clangd") == 1 then
+        table.insert(servers, "clangd")
+      end
+      if vim.fn.executable("lua-language-server") == 1 then
+        table.insert(servers, "lua_ls")
+      end
+
       for _, server_name in ipairs(servers) do
         vim.lsp.enable(server_name)
       end

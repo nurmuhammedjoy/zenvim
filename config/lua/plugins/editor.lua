@@ -2,6 +2,7 @@ return {
   {
     "echasnovski/mini.files",
     version = "*",
+    lazy = false,
     keys = {
       { "<C-n>", ":lua MiniFiles.open()<CR>", desc = "Toggle file explorer" },
       { "<C-e>", ":lua MiniFiles.open()<CR>", desc = "Toggle file explorer" },
