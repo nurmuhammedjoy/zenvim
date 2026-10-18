@@ -1,0 +1,80 @@
+/* Gruvbox restated in OKLCH: lightness and hue kept, near-grey surfaces retain ≥0.006 chroma so they
+ * don't read flat. Dark is the default. Single source of truth for the page.
+ */
+:root {
+  color-scheme: dark light;
+
+  --color-paper:        oklch(24.1% 0.0060 80);   /* ~#1d2021  page surface */
+  --color-paper-2:      oklch(27.7% 0.0060 80);   /* ~#282828  keycap / raised */
+  --color-paper-3:      oklch(31.1% 0.0060 80);   /* ~#32302f  inline code chip */
+  --color-rule:         oklch(34.4% 0.0080 80);   /* ~#3c3836  hairlines between rows */
+  --color-ink:          oklch(89.4% 0.0566 89.2); /*  #ebdbb2  primary text */
+  --color-ink-2:        oklch(69.0% 0.0346 76.3); /*  #a89984  secondary text */
+  --color-accent:       oklch(83.2% 0.1595 83.0); /*  #fabd2f  one accent */
+  --color-accent-ink:   oklch(24.1% 0.0060 80);   /*  text on an accent fill */
+  --color-link:         oklch(69.3% 0.0420 169.8);/*  #83a598  links */
+  --color-focus:        oklch(83.2% 0.1595 83.0); /*  #fabd2f  focus ring */
+  --color-icon:         oklch(83.2% 0.1595 83.0); /*  #fabd2f  icon strokes */
+
+  /* Code panels stay terminal-dark in both schemes */
+  --color-code-bg:      oklch(24.1% 0.0060 80);   /* ~#1d2021 */
+  --color-code-ink:     oklch(89.4% 0.0566 89.2); /*  #ebdbb2 */
+  --color-code-dim:     oklch(69.0% 0.0346 76.3); /*  #a89984 */
+  --color-code-rule:    oklch(34.4% 0.0080 80);   /* ~#3c3836 */
+  --color-code-accent:  oklch(75.6% 0.1078 137.7);/*  #8ec07c  the shell prompt */
+
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body:    "Geist", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* Major-third scale from a 16px body */
+  --text-xs:   0.75rem;
+  --text-sm:   0.84rem;
+  --text-base: 1rem;
+  --text-md:   1.25rem;
+  --text-lg:   1.5625rem;
+  --text-xl:   1.9531rem;
+  --text-2xl:  2.4414rem;
+  --display:   clamp(2.5rem, 7vw + 0.5rem, 5rem);
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  --rule-thin:  1px;
+  --rule-thick: 2px;
+  --radius-none: 0;
+
+  /* brutal motion: 0.75x speed, sharp ease-out, no overshoot */
+  --dur-micro: 90ms;
+  --dur-short: 160ms;
+  --dur-long:  320ms;
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --z-base: 1;
+  --z-sticky: 200;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-paper:      oklch(95.6% 0.0555 96.2);  /* #fbf1c7 */
+    --color-paper-2:    oklch(92.2% 0.0553 92.5);  /* #f2e5bc */
+    --color-paper-3:    oklch(89.4% 0.0566 89.2);  /* #ebdbb2 */
+    --color-rule:       oklch(82.5% 0.0507 85.1);  /* #d5c4a1 */
+    --color-ink:        oklch(34.4% 0.0066 48.5);  /* #3c3836 */
+    --color-ink-2:      oklch(48.2% 0.0181 61.0);  /* #665c54 */
+    --color-accent:     oklch(72.5% 0.1429 77.7);  /* #d79921 */
+    --color-accent-ink: oklch(24.1% 0.0060 80);    /* text on an accent fill */
+    --color-link:       oklch(47.1% 0.0816 215.8); /* #076678 */
+    --color-focus:      oklch(51.3% 0.1616 39.3);  /* #af3a03 — clears 3:1 on cream paper */
+    --color-icon:       oklch(51.3% 0.1616 39.3);  /* #af3a03 — the accent is too light here */
+  }
+}

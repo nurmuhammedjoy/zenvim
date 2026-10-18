@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Zenvim: Neovim for Termux</title>
+<meta name="description" content="A fast Neovim setup built for Termux on Android, with LSP, completion and fuzzy finding tuned for touch keyboards.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d2021'/%3E%3Cpath d='M16 14h32v8L26 42h22v8H16v-8l22-20H16z' fill='%23fabd2f'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Geist:wght@100..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+
+<style>
+  /* Hallmark · genre: editorial · macrostructure: Workbench · tone: brutalist · theme: Gruvbox (preserved)
+   * nav: N7 Brutal slab · footer: Ft4 Dense colophon · enrichment: none (real captures + typography)
+   * hero: H2 split diptych (size=xl, left-bias, divider=frame edge) · bento: 6 tiles, irregular spans
+   * install: F4 steps (01/02/03, vertical) · keymaps: F3 spec sheet · plugins: dense list · contribute: prose
+   * motion: caret-blink, cta-lift, tab-crossfade · contrast: pass (40–41) · slop: pass (42–45)
+   * pre-emit critique: P5 H5 E4 S5 R4 V4 (E: live render unverified · R: mono register)
+   * known deviation: mono used beyond 2 slots (gate 38) — deliberate terminal register, not a third body face
+   */
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    overflow-x: clip;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--color-link); text-underline-offset: 2px; text-decoration-thickness: 1px; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;}
+  a:hover { text-decoration-thickness: 2px; }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+  code, kbd, pre, .mono { font-family: var(--font-mono); }
+  [hidden] { display: none !important; }
+  [x-cloak] { display: none !important; }
+  [disabled], [aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+  /* interactive bars: kill inherited line-height so items sit on one baseline in a centred flex row */
+  .mark, .btn, .slab-nav a, .tabs button, .copy, .chips button { line-height: 1; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .wrap { width: min(1180px, 100%); padding-inline: clamp(1.25rem, 5vw, 2.5rem); margin-inline: auto; }
+  .mt-sm { margin-top: var(--space-sm); }
+  .mb-md { margin-bottom: var(--space-md); }
+
+  h1, h2, h3 { margin: 0; font-style: normal; text-wrap: balance; overflow-wrap: anywhere; min-width: 0; }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--display);
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 82;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.9rem, 3.2vw + 0.6rem, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.008em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 86;
+  }
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-size: 1.18rem;
+    line-height: 1.25;
+    font-variation-settings: "wdth" 92;
+  }
+  p { margin: 0; max-width: 65ch; }
+
+  .slab {
+    position: sticky; top: 0; z-index: var(--z-sticky);
+    background: var(--color-paper);
+    border-bottom: var(--rule-thick) solid var(--color-ink);
+  }
+  .slab-in { display: flex; align-items: center; gap: var(--space-md); padding-block: var(--space-xs); }
+  .mark {
+    display: inline-flex; align-items: center;
+    font-family: var(--font-mono); font-weight: 700; font-size: 1.02rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--color-ink); text-decoration: none; white-space: nowrap;
+  }
+  .mark::before { content: ""; width: 0.62em; height: 0.62em; margin-inline-end: var(--space-xs); background: var(--color-accent); }
+  .slab-nav { margin-inline-start: var(--space-lg); }
+  .slab-nav ul { display: flex; gap: var(--space-lg); margin: 0; padding: 0; list-style: none; }
+  .slab-nav a {
+    display: inline-block; padding-block: var(--space-sm);
+    font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--color-ink); text-decoration: none; white-space: nowrap;
+  }
+  .slab-actions { display: flex; align-items: center; gap: var(--space-xs); margin-inline-start: auto; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md); min-height: 44px;
+    font-family: var(--font-body); font-weight: 650; font-size: var(--text-sm);
+    letter-spacing: 0.07em; text-transform: uppercase;
+    text-decoration: none; cursor: pointer; white-space: nowrap;
+    color: var(--color-ink); background: transparent;
+    border: var(--rule-thick) solid var(--color-ink); border-radius: var(--radius-none);
+    transition: background-color var(--dur-short) var(--ease-out),
+                color var(--dur-short) var(--ease-out),
+                transform var(--dur-micro) var(--ease-out);
+  }
+  .btn svg { width: 17px; height: 17px; flex: none; stroke: currentColor; fill: none; }
+  .btn:active { transform: translateY(1px); }
+  .btn-fill { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-ink); }
+  @media (hover: hover) and (pointer: fine) {
+    .slab-nav a:hover { text-decoration: underline; text-decoration-thickness: var(--rule-thick); text-underline-offset: 2px; }
+    .btn:hover { background: var(--color-ink); color: var(--color-paper); transform: translateY(-1.5px); }
+    .btn-fill:hover { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
+  }
+
+  .hero { padding-block: clamp(2.25rem, 6vw, 4.5rem) clamp(3rem, 8vw, 6.5rem); }
+  .hero-split { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+  .lede {
+    margin-top: var(--space-lg);
+    max-width: 36em;
+    font-size: clamp(1.1rem, 1.4vw + 0.75rem, 1.3rem);
+    line-height: 1.5;
+    color: var(--color-ink-2);
+  }
+  .lede strong { color: var(--color-ink); font-weight: 600; }
+  .actions { margin-top: var(--space-xl); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+
+  .shot { margin: 0; border: var(--rule-thick) solid var(--color-ink); background: var(--color-paper-2); }
+  .shot figcaption {
+    border-top: var(--rule-thick) solid var(--color-ink);
+    padding: var(--space-xs) var(--space-md);
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink-2);
+  }
+  .shot img { width: 100%; }
+
+  @media (min-width: 60rem) {
+    .hero-split { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-2xl); align-items: center; }
+  }
+
+  .block { padding-block: clamp(3rem, 7vw, 6rem); border-top: var(--rule-thick) solid var(--color-rule); }
+  .block--tight { padding-block: clamp(2.25rem, 5vw, 4rem); }
+  .head { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); max-width: 62ch; margin-bottom: var(--space-2xl); }
+  .head p { color: var(--color-ink-2); font-size: 1.05rem; }
+  .shots { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
+
+  /* the bento gap shows --color-rule, so tiles read as ruled cells with no doubled borders */
+  .bento {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: minmax(0, 1fr);
+    gap: var(--rule-thick);
+    background: var(--color-rule);
+    border: var(--rule-thick) solid var(--color-rule);
+  }
+  .cell { background: var(--color-paper); padding: var(--space-lg); display: grid; gap: var(--space-2xs); align-content: start; }
+  .cell h3 { display: flex; align-items: center; gap: var(--space-xs); }
+  .cell h3 svg { width: 18px; height: 18px; flex: none; stroke: var(--color-icon); }
+  .cell p { color: var(--color-ink-2); font-size: 1rem; }
+  @media (min-width: 40rem) {
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cell-wide { grid-column: span 2; }
+  }
+  @media (min-width: 60rem) {
+    .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  .fsteps { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2xl); margin: 0; padding: 0; list-style: none; max-width: 68rem; }
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
+  .stage-no {
+    justify-self: start;
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 2.1rem; height: 2.1rem; padding-inline: var(--space-xs);
+    background: var(--color-accent); color: var(--color-accent-ink);
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.04em;
+  }
+  .reqs { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; padding: 0; list-style: none; max-width: 48rem; border-top: var(--rule-thin) solid var(--color-rule); }
+  .reqs li { border-bottom: var(--rule-thin) solid var(--color-rule); }
+  .req {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs) var(--space-sm);
+    width: 100%; padding-block: var(--space-sm);
+    font: inherit; text-align: start; cursor: pointer;
+    background: none; border: 0; text-decoration: none;
+    color: var(--color-ink);
+  }
+  .req > svg { width: 16px; height: 16px; flex: none; stroke: var(--color-icon); }
+  .req-do {
+    margin-inline-start: auto; display: inline-flex; align-items: center; gap: var(--space-3xs);
+    font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.02em;
+    color: var(--color-ink-2); white-space: nowrap;
+  }
+  .req-do svg { width: 14px; height: 14px; flex: none; stroke: currentColor; }
+  @media (hover: hover) and (pointer: fine) {
+    .req:hover, .req:hover .req-do { color: var(--color-link); }
+  }
+  .req:active { color: var(--color-link); }
+
+  .tabs {
+    display: inline-flex; margin-bottom: var(--space-md);
+    border: var(--rule-thick) solid var(--color-ink);
+  }
+  .tabs button {
+    font: inherit; font-weight: 650; font-size: var(--text-sm);
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: var(--space-sm) var(--space-md); min-height: 44px; white-space: nowrap;
+    border: 0; border-radius: var(--radius-none);
+    background: transparent; color: var(--color-ink-2); cursor: pointer;
+    transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+  }
+  .tabs button + button { border-inline-start: var(--rule-thick) solid var(--color-ink); }
+  .tabs button[aria-selected="true"] { background: var(--color-ink); color: var(--color-paper); }
+
+  .code { border: var(--rule-thick) solid var(--color-ink); background: var(--color-code-bg); }
+  .code-head {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-md);
+    padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-md);
+    border-bottom: var(--rule-thin) solid var(--color-code-rule);
+  }
+  .code-head .label { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-code-dim); }
+  .code pre { margin: 0; padding: var(--space-md); overflow-x: auto; color: var(--color-code-ink); font-size: 0.875rem; line-height: 1.7; }
+  .code pre .p { color: var(--color-code-accent); user-select: none; }
+  .caret {
+    display: inline-block; width: 0.55ch; height: 1.05em; margin-inline-start: var(--rule-thick);
+    background: var(--color-code-ink); vertical-align: -0.18em;
+    animation: blink 1.1s steps(2, start) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .copy {
+    display: inline-flex; align-items: center; gap: var(--space-2xs);
+    font-family: var(--font-body); font-weight: 600; font-size: var(--text-xs);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: var(--space-xs) var(--space-sm); min-height: 44px; white-space: nowrap;
+    border: var(--rule-thin) solid var(--color-code-dim); border-radius: var(--radius-none);
+    background: transparent; color: var(--color-code-ink); cursor: pointer;
+    transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out);
+  }
+  .copy svg { width: 14px; height: 14px; flex: none; }
+  /* the code panel stays dark in both schemes, so its focus ring uses panel ink, not the page focus colour */
+  .code :focus-visible { outline-color: var(--color-code-ink); }
+  .notes { margin: var(--space-lg) 0 0; padding: 0; list-style: none; display: grid; gap: var(--space-2xs); color: var(--color-ink-2); font-size: 1rem; }
+  .notes code { color: var(--color-ink); background: var(--color-paper-3); padding: var(--space-3xs) var(--space-2xs); }
+
+  .km-tools { display: grid; gap: var(--space-md); margin-bottom: var(--space-lg); }
+  @media (min-width: 45rem) { .km-tools { grid-template-columns: minmax(0, 1fr) auto; align-items: center; } }
+  .search {
+    display: flex; align-items: center; gap: var(--space-xs);
+    padding-inline: var(--space-sm);
+    border: var(--rule-thick) solid var(--color-ink); background: var(--color-paper);
+  }
+  .search svg { width: 18px; height: 18px; flex: none; stroke: var(--color-ink-2); }
+  .search input {
+    flex: 1; min-width: 0; min-height: 44px; padding-block: var(--space-xs);
+    font: inherit; color: var(--color-ink); background: transparent; border: 0;
+  }
+  .search input::placeholder { color: var(--color-ink-2); }
+  .search input:focus-visible { outline: none; }
+  .search:focus-within { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs); }
+  .chips button {
+    font-family: var(--font-body); font-weight: 600; font-size: var(--text-xs);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: var(--space-xs) var(--space-sm); min-height: 44px; white-space: nowrap;
+    border: var(--rule-thin) solid var(--color-ink-2); border-radius: var(--radius-none);
+    background: transparent; color: var(--color-ink-2); cursor: pointer;
+    transition: background-color var(--dur-short) var(--ease-out),
+                color var(--dur-short) var(--ease-out),
+                border-color var(--dur-short) var(--ease-out);
+  }
+  .chips button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
+  @media (hover: hover) and (pointer: fine) {
+    .tabs button:hover { color: var(--color-ink); }
+    .chips button:hover { border-color: var(--color-ink); color: var(--color-ink); }
+    .copy:hover { background: var(--color-code-ink); color: var(--color-code-bg); }
+  }
+  .tabs button:active, .copy:active, .chips button:active { transform: translateY(1px); }
+  @media (pointer: coarse) {
+    .mark { padding-block: var(--space-xs); }
+  }
+
+  .km-list { list-style: none; margin: 0; padding: 0; border-top: var(--rule-thin) solid var(--color-rule); }
+  .km-row {
+    display: grid; gap: var(--space-2xs) var(--space-lg);
+    padding-block: var(--space-md); align-items: baseline;
+    border-bottom: var(--rule-thin) solid var(--color-rule);
+  }
+  @media (min-width: 45rem) { .km-row { grid-template-columns: minmax(180px, 260px) minmax(0, 1fr); } }
+  .km-keys { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+  .km-keys .sep, .km-keys .plus { color: var(--color-ink-2); font-size: 0.8rem; }
+  .km-keys .seq, .km-keys .combo { display: inline-flex; gap: var(--space-2xs); align-items: center; }
+  kbd {
+    display: inline-block; min-width: 2em; text-align: center;
+    padding: var(--space-3xs) var(--space-2xs); font-size: 0.8rem; font-weight: 500; color: var(--color-ink);
+    background: var(--color-paper-2); border: var(--rule-thin) solid var(--color-rule);
+    box-shadow: 0 var(--rule-thick) 0 var(--color-rule);
+  }
+  .km-act { color: var(--color-ink); }
+  .km-act small { color: var(--color-ink-2); margin-inline-start: var(--space-xs); font-size: 0.85rem; }
+  .km-empty { padding-block: var(--space-lg); color: var(--color-ink-2); }
+  .km-empty button { font: inherit; color: var(--color-link); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+  .hint { margin-top: var(--space-md); color: var(--color-ink-2); font-size: 0.95rem; }
+
+  .plug { margin: 0; display: grid; border-top: var(--rule-thin) solid var(--color-rule); }
+  .plug-row { display: grid; gap: var(--space-2xs) var(--space-2xl); padding-block: var(--space-md); border-bottom: var(--rule-thin) solid var(--color-rule); }
+  @media (min-width: 45rem) { .plug-row { grid-template-columns: 180px minmax(0, 1fr); } }
+  .plug dt { font-family: var(--font-display); font-weight: 650; font-size: 1.02rem; }
+  .plug dd { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-sm); }
+  .plug dd span { font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-ink-2); }
+
+  .contrib { display: grid; gap: var(--space-lg); max-width: 62ch; }
+  .contrib > p { color: var(--color-ink-2); font-size: 1.05rem; }
+  .steps { list-style: none; margin: 0; padding: 0; border-top: var(--rule-thin) solid var(--color-rule); }
+  .steps li {
+    display: grid; grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-md); align-items: baseline;
+    padding-block: var(--space-md); border-bottom: var(--rule-thin) solid var(--color-rule);
+  }
+  .steps-no { font-family: var(--font-mono); font-weight: 700; font-size: var(--text-sm); letter-spacing: 0.06em; color: var(--color-icon); }
+  .steps code { color: var(--color-ink); background: var(--color-paper-3); padding: var(--space-3xs) var(--space-2xs); }
+
+  .foot { border-top: var(--rule-thick) solid var(--color-ink); padding-block: var(--space-2xl); }
+  .foot-mark {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.75rem, 11vw, 7rem); line-height: 1.02;
+    letter-spacing: -0.015em; text-transform: uppercase;
+    font-variation-settings: "wdth" 80; color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+  .colophon {
+    margin-top: var(--space-lg); padding-top: var(--space-md);
+    border-top: var(--rule-thin) solid var(--color-rule);
+    font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.9;
+    color: var(--color-ink-2); max-width: 72ch; overflow-wrap: anywhere;
+  }
+  .colophon-end { color: var(--color-ink); }
+
+  /* Nav collapses to wordmark + actions below the desktop slab width */
+  @media (max-width: 61.99rem) {
+    .slab-nav { display: none; }
+    .slab-actions { margin-inline-start: auto; }
+  }
+  @media (max-width: 47.99rem) {
+    .slab-actions { gap: var(--space-2xs); flex-wrap: wrap; justify-content: flex-end; }
+    .slab-actions .btn { padding: var(--space-xs) var(--space-sm); font-size: var(--text-xs); }
+    .mark { font-size: 0.95rem; letter-spacing: 0.1em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+    .caret { animation: none; }
+    .btn:hover { transform: none; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="slab">
+  <div class="wrap slab-in">
+    <a class="mark" href="#top">Zenvim</a>
+    <nav class="slab-nav" aria-label="Primary">
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#keymaps">Keymaps</a></li>
+        <li><a href="#plugins">Plugins</a></li>
+      </ul>
+    </nav>
+    <div class="slab-actions">
+      <a class="btn" href="https://github.com/nurmuhammedjoy/zenvim"><i data-lucide="external-link" aria-hidden="true"></i>GitHub</a>
+      <a class="btn btn-fill" href="#install">Install</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-split">
+      <div>
+        <h1>Neovim that fits in your pocket</h1>
+        <p class="lede">Zenvim is a fast Neovim setup for <strong>Termux on Android</strong>. It comes with code intelligence, completion and fuzzy finding, and every keybinding works on a touch keyboard.</p>
+        <div class="actions">
+          <a class="btn btn-fill" href="#install"><i data-lucide="download" aria-hidden="true"></i>Install Zenvim</a>
+          <a class="btn" href="https://github.com/nurmuhammedjoy/zenvim"><i data-lucide="external-link" aria-hidden="true"></i>View on GitHub</a>
+        </div>
+      </div>
+      <div class="hero-shot">
+        <figure class="shot">
+          <img src="https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/preview/preview.png" width="1840" height="864" fetchpriority="high" alt="Zenvim with the file explorer and a code buffer open">
+          <figcaption>mini.files and a buffer, in Termux</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="features">
+    <div class="wrap">
+      <header class="head">
+        <h2>What you get</h2>
+        <p>A small config that does the everyday work of an editor.</p>
+      </header>
+      <ul class="bento">
+        <li class="cell cell-wide">
+          <h3><i data-lucide="zap" aria-hidden="true"></i>Starts fast</h3>
+          <p>Plugins load lazily through lazy.nvim, so Neovim opens quickly even on a phone.</p>
+        </li>
+        <li class="cell">
+          <h3><i data-lucide="braces" aria-hidden="true"></i>Understands your code</h3>
+          <p>Language servers for HTML, CSS, TypeScript, JSON, Emmet and Bash install through Mason. clangd and lua_ls are used from your PATH.</p>
+        </li>
+        <li class="cell">
+          <h3><i data-lucide="text-cursor-input" aria-hidden="true"></i>Completes as you type</h3>
+          <p>blink.cmp suggests completions and LuaSnip adds snippets.</p>
+        </li>
+        <li class="cell">
+          <h3><i data-lucide="search" aria-hidden="true"></i>Finds anything</h3>
+          <p>Telescope searches files and text. mini.files lets you browse folders.</p>
+        </li>
+        <li class="cell">
+          <h3><i data-lucide="palette" aria-hidden="true"></i>Easy on the eyes</h3>
+          <p>A transparent Gruvbox theme with a lualine statusline.</p>
+        </li>
+        <li class="cell cell-wide">
+          <h3><i data-lucide="smartphone" aria-hidden="true"></i>Built for touch</h3>
+          <p>Keybindings are chosen to be comfortable on a mobile keyboard.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block block--tight" id="screenshots">
+    <div class="wrap">
+      <header class="head">
+        <h2>Screenshots</h2>
+        <p>Zenvim running in Termux.</p>
+      </header>
+      <div class="shots">
+        <figure class="shot">
+          <img loading="lazy" src="https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/preview/preview2.png" width="1840" height="864" alt="Zenvim showing Telescope and the statusline">
+          <figcaption>Telescope and the statusline</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="install" x-data="installer()">
+    <div class="wrap">
+      <header class="head">
+        <h2>Install</h2>
+        <p>One command in Termux. It takes a few minutes the first time.</p>
+      </header>
+
+      <ol class="fsteps">
+        <li class="stage">
+          <span class="stage-no" aria-hidden="true">01</span>
+          <div>
+            <h3>Prerequisites</h3>
+            <ul class="reqs mt-sm">
+              <li>
+                <a class="req" href="https://f-droid.org/en/packages/com.termux/">
+                  <i data-lucide="check" aria-hidden="true"></i>
+                  <span>Termux on Android</span>
+                  <span class="req-do">F-Droid<i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+                </a>
+              </li>
+              <li>
+                <button class="req" type="button" @click="copy('pkg install nvim', 'nvim')">
+                  <i data-lucide="check" aria-hidden="true"></i>
+                  <span>Neovim 0.11.0 or newer</span>
+                  <span class="req-do" aria-live="polite" x-text="copied === 'nvim' ? 'Copied' : 'pkg install nvim'"></span>
+                </button>
+              </li>
+              <li>
+                <button class="req" type="button" @click="copy('pkg install git', 'git')">
+                  <i data-lucide="check" aria-hidden="true"></i>
+                  <span>Git</span>
+                  <span class="req-do" aria-live="polite" x-text="copied === 'git' ? 'Copied' : 'pkg install git'"></span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="stage">
+          <span class="stage-no" aria-hidden="true">02</span>
+          <div>
+            <h3 class="mb-md">Run the installer</h3>
+            <div class="tabs" role="tablist" aria-label="Install method">
+              <button type="button" role="tab" id="tab-auto" aria-controls="panel-auto" x-ref="tabAuto"
+                      :aria-selected="tab === 'auto'" :tabindex="tab === 'auto' ? 0 : -1"
+                      @click="tab = 'auto'" @keydown.arrow-right.prevent="tab = 'manual'; $refs.tabManual.focus()" @keydown.arrow-left.prevent="tab = 'manual'; $refs.tabManual.focus()">One command</button>
+              <button type="button" role="tab" id="tab-manual" aria-controls="panel-manual" x-ref="tabManual"
+                      :aria-selected="tab === 'manual'" :tabindex="tab === 'manual' ? 0 : -1"
+                      @click="tab = 'manual'" @keydown.arrow-right.prevent="tab = 'auto'; $refs.tabAuto.focus()" @keydown.arrow-left.prevent="tab = 'auto'; $refs.tabAuto.focus()">By hand</button>
+            </div>
+
+            <div class="code" id="panel-auto" role="tabpanel" aria-labelledby="tab-auto" x-show="tab === 'auto'" x-transition.opacity.duration.160ms>
+              <div class="code-head">
+                <span class="label">Termux — one command</span>
+                <button class="copy" type="button" @click="copy(cmds.auto, 'auto')">
+                  <i data-lucide="copy" aria-hidden="true"></i><span x-text="copied === 'auto' ? 'Copied' : 'Copy'" aria-live="polite"></span>
+                </button>
+              </div>
+<pre><code><span class="p">$ </span>curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | bash<span class="caret" aria-hidden="true"></span></code></pre>
+            </div>
+
+            <div class="code" id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" x-show="tab === 'manual'" x-cloak x-transition.opacity.duration.160ms>
+              <div class="code-head">
+                <span class="label">Termux — by hand</span>
+                <button class="copy" type="button" @click="copy(cmds.manual, 'manual')">
+                  <i data-lucide="copy" aria-hidden="true"></i><span x-text="copied === 'manual' ? 'Copied' : 'Copy'" aria-live="polite"></span>
+                </button>
+              </div>
+<pre><code><span class="p"># </span>back up your current config
+mv ~/.config/nvim ~/.config/nvim.bak
+<span class="p"># </span>get Zenvim
+git clone https://github.com/nurmuhammedjoy/zenvim.git
+mkdir -p ~/.config/nvim
+cp -r zenvim/config/* ~/.config/nvim/
+<span class="p"># </span>remove the clone
+rm -rf zenvim</code></pre>
+            </div>
+
+            <ul class="notes">
+              <li>Your existing <code>~/.config/nvim</code> is backed up to <code>~/.config/nvim.bak</code>.</li>
+              <li>The installer only works in Termux on Android.</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="stage">
+          <span class="stage-no" aria-hidden="true">03</span>
+          <div>
+            <h3>First launch</h3>
+            <ul class="notes mt-sm">
+              <li>Neovim downloads plugins and language servers, so stay online. If a server is missing, run <code>:Mason</code> to install it.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="keymaps" x-data="keymaps()">
+    <div class="wrap">
+      <header class="head">
+        <h2>Keymaps</h2>
+        <p>The leader key is <kbd>Space</kbd>.</p>
+      </header>
+
+      <div class="km-tools">
+        <label class="search">
+          <i data-lucide="search" aria-hidden="true"></i>
+          <input type="search" x-model="q" placeholder="Search keymaps, like “buffer” or “ff”" aria-label="Search keymaps" autocomplete="off">
+        </label>
+        <div class="chips" role="group" aria-label="Filter by group">
+          <template x-for="g in groups" :key="g">
+            <button type="button" :aria-pressed="group === g" @click="group = g" x-text="g"></button>
+          </template>
+        </div>
+      </div>
+
+      <p class="sr-only" aria-live="polite" x-text="shown.length + ' keymaps shown'"></p>
+
+      <ul class="km-list">
+        <template x-for="(it, i) in shown" :key="it.g + i">
+          <li class="km-row">
+            <div class="km-keys" x-html="keyHtml(it)"></div>
+            <div class="km-act"><span x-text="it.a"></span><small x-show="it.m" x-text="it.m"></small></div>
+          </li>
+        </template>
+      </ul>
+      <p class="km-empty" x-show="shown.length === 0" x-cloak>No keymap matches “<span x-text="q"></span>”. <button type="button" @click="q = ''; group = 'All'">Clear the filters</button> to see them all.</p>
+      <p class="hint">Forgot a key? Press <kbd>Space</kbd> and wait. which-key shows what comes next.</p>
+    </div>
+  </section>
+
+  <section class="block" id="plugins">
+    <div class="wrap">
+      <header class="head">
+        <h2>What’s inside</h2>
+        <p>Everything is pre-configured and loads only when needed.</p>
+      </header>
+      <dl class="plug">
+        <div class="plug-row"><dt>Core</dt><dd><span>lazy.nvim</span><span>plenary.nvim</span></dd></div>
+        <div class="plug-row"><dt>Interface</dt><dd><span>gruvbox.nvim</span><span>lualine.nvim</span><span>bufferline.nvim</span><span>dressing.nvim</span><span>indent-blankline.nvim</span><span>which-key.nvim</span></dd></div>
+        <div class="plug-row"><dt>Editing</dt><dd><span>mini.files</span><span>telescope.nvim</span><span>nvim-treesitter</span><span>nvim-autopairs</span><span>Comment.nvim</span><span>nvim-surround</span><span>mini.move</span></dd></div>
+        <div class="plug-row"><dt>Language support</dt><dd><span>nvim-lspconfig</span><span>mason.nvim</span><span>mason-lspconfig.nvim</span><span>blink.cmp</span><span>LuaSnip</span><span>friendly-snippets</span></dd></div>
+        <div class="plug-row"><dt>Terminal</dt><dd><span>toggleterm.nvim</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="block" id="contribute">
+    <div class="wrap">
+      <header class="head">
+        <h2>Contribute</h2>
+        <p>Bug reports and pull requests are welcome.</p>
+      </header>
+      <div class="contrib">
+        <p>Found a bug or want a feature? Open an <a href="https://github.com/nurmuhammedjoy/zenvim/issues">issue</a>, or send a <a href="https://github.com/nurmuhammedjoy/zenvim/pulls">pull request</a> with these steps:</p>
+        <ol class="steps">
+          <li><span class="steps-no" aria-hidden="true">01</span><p>Fork the repository.</p></li>
+          <li><span class="steps-no" aria-hidden="true">02</span><p>Create a branch: <code>git checkout -b feature/my-change</code></p></li>
+          <li><span class="steps-no" aria-hidden="true">03</span><p>Commit your changes and push the branch.</p></li>
+          <li><span class="steps-no" aria-hidden="true">04</span><p>Open a pull request.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="foot-mark" aria-hidden="true">Zenvim</p>
+    <p class="colophon">
+      Zenvim — a Neovim configuration for Termux on Android. Made by <a href="https://github.com/nurmuhammedjoy">nurmuhammedjoy</a>.
+      Source under GPL-3.0 · <a href="https://github.com/nurmuhammedjoy/zenvim">github.com/nurmuhammedjoy/zenvim</a>.
+      <span class="colophon-end">© 2026.</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+  /* Alpine components (defined before Alpine starts) */
+  function installer() {
+    return {
+      tab: 'auto',
+      copied: null,
+      cmds: {
+        auto: 'curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | bash',
+        manual: [
+          'mv ~/.config/nvim ~/.config/nvim.bak',
+          'git clone https://github.com/nurmuhammedjoy/zenvim.git',
+          'mkdir -p ~/.config/nvim',
+          'cp -r zenvim/config/* ~/.config/nvim/',
+          'rm -rf zenvim'
+        ].join('\n')
+      },
+      copy(text, key) {
+        const done = () => { this.copied = key; setTimeout(() => { if (this.copied === key) this.copied = null; }, 1600); };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(done).catch(() => this.fallback(text, done));
+        } else { this.fallback(text, done); }
+      },
+      fallback(text, done) {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    };
+  }
+
+  function keymaps() {
+    return {
+      q: '',
+      group: 'All',
+      groups: ['All', 'Files', 'Search', 'Code', 'Move'],
+      items: [
+        { g: 'Files',  k: ['Ctrl+s'], a: 'Save file', m: 'Normal, Insert' },
+        { g: 'Files',  k: ['Ctrl+q'], a: 'Quit Neovim', m: 'Normal, Insert' },
+        { g: 'Files',  k: ['Ctrl+e', 'Ctrl+n'], a: 'Toggle the file explorer', m: 'Normal' },
+        { g: 'Files',  k: ['Tab', 'Shift+Tab'], sep: '/', a: 'Next or previous buffer', m: 'Normal' },
+        { g: 'Files',  k: ['Space n h'], a: 'Clear search highlights', m: 'Normal' },
+        { g: 'Files',  k: ['Space b n'], a: 'Next buffer', m: 'Normal' },
+        { g: 'Files',  k: ['Space b p'], a: 'Previous buffer', m: 'Normal' },
+        { g: 'Files',  k: ['Ctrl+t'], a: 'Toggle the terminal', m: 'Normal, Terminal' },
+        { g: 'Search', k: ['Space f f'], a: 'Find files' },
+        { g: 'Search', k: ['Space f g'], a: 'Live grep: search text in all files' },
+        { g: 'Search', k: ['Space f b'], a: 'Find open buffers' },
+        { g: 'Search', k: ['Space f o'], a: 'Recent files' },
+        { g: 'Code',   k: ['g d'], a: 'Go to definition' },
+        { g: 'Code',   k: ['g r'], a: 'Go to references' },
+        { g: 'Code',   k: ['K'], a: 'Show hover documentation' },
+        { g: 'Code',   k: ['Space r n'], a: 'Rename symbol' },
+        { g: 'Code',   k: ['Space c a'], a: 'Code actions' },
+        { g: 'Code',   k: ['Space f'], a: 'Format file' },
+        { g: 'Code',   k: ['Space r'], a: 'Search and replace, confirming each' },
+        { g: 'Code',   k: ['Space R'], a: 'Search and replace all' },
+        { g: 'Move',   k: ['Alt+h', 'Alt+l'], sep: '/', a: 'Move line or selection left or right' },
+        { g: 'Move',   k: ['Alt+j', 'Alt+k'], sep: '/', a: 'Move line or selection down or up' }
+      ],
+      get shown() {
+        const q = this.q.trim().toLowerCase();
+        return this.items.filter(i =>
+          (this.group === 'All' || i.g === this.group) &&
+          (!q || (i.a + ' ' + i.k.join(' ') + ' ' + i.g + ' ' + (i.m || '')).toLowerCase().includes(q))
+        );
+      },
+      keyHtml(it) {
+        const sep = it.sep || 'or';
+        const variant = v => v.split(' ').map(seq =>
+          '<span class="seq">' + seq.split('+').map(t => '<kbd>' + t + '</kbd>').join('<span class="plus">+</span>') + '</span>'
+        ).join('');
+        return it.k.map(variant).join('<span class="sep">' + sep + '</span>');
+      }
+    };
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+
+<script>
+  function paintIcons() { if (window.lucide) lucide.createIcons(); }
+  paintIcons();
+  window.addEventListener('load', paintIcons);
+  document.addEventListener('alpine:initialized', () => setTimeout(paintIcons, 0));
+</script>
+</body>
+</html>
