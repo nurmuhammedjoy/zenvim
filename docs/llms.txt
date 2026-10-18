@@ -1,0 +1,32 @@
+# Zenvim
+
+> Zenvim is a lightweight Neovim configuration for Termux on Android. It starts in 40–70 ms, loads plugins lazily with lazy.nvim, and ships LSP, completion, Telescope and mini.files — tuned for low-end devices and on-screen keyboards. Free and open source under GPL-3.0.
+
+- [Overview](https://nurmuhammedjoy.github.io/zenvim/): what Zenvim is and what it includes.
+- [Features](https://nurmuhammedjoy.github.io/zenvim/#features): startup time, plugins, language servers.
+- [Install](https://nurmuhammedjoy.github.io/zenvim/#install): one command in Termux, or a manual git clone.
+- [Keymaps](https://nurmuhammedjoy.github.io/zenvim/#keymaps): full default keymap list; leader key is Space.
+- [Plugins](https://nurmuhammedjoy.github.io/zenvim/#plugins): every bundled plugin by group.
+- [Source](https://github.com/nurmuhammedjoy/zenvim): GitHub repository, issues and pull requests.
+
+## Requirements
+
+- Termux on Android (installed from F-Droid)
+- Neovim 0.11.0 or newer (`pkg install nvim`)
+- Git (`pkg install git`)
+
+## Install
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | bash
+```
+
+The installer backs up any existing `~/.config/nvim` to `~/.config/nvim.bak`. It only works inside Termux on Android.
+
+## Facts
+
+- Type: Neovim configuration (dotfiles), not a Neovim plugin.
+- Platforms: Android via Termux. Not supported on desktop Linux, macOS or Windows.
+- License: GNU GPL v3.0.
+- Author: nurmuhammedjoy.
+- Language servers: HTML, CSS, TypeScript, JSON, Emmet and Bash via Mason; `clangd` and `lua_ls` are picked up from `$PATH`.

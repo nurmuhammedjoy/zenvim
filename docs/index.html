@@ -5,7 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <title>Zenvim: Neovim for Termux</title>
-<meta name="description" content="A fast Neovim setup built for Termux on Android, with LSP, completion and fuzzy finding tuned for touch keyboards.">
+<meta name="description" content="A fast Neovim configuration for Termux on Android, with LSP, completion and fuzzy finding tuned for touch keyboards. Free, open source, starts in 40–70 ms.">
+<meta name="author" content="nurmuhammedjoy">
+<meta name="theme-color" content="#1d2021">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://nurmuhammedjoy.github.io/zenvim/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zenvim">
+<meta property="og:title" content="Zenvim: Neovim for Termux">
+<meta property="og:description" content="A fast Neovim configuration for Termux on Android, with LSP, completion and fuzzy finding tuned for touch keyboards. Free, open source, starts in 40–70 ms.">
+<meta property="og:url" content="https://nurmuhammedjoy.github.io/zenvim/">
+<meta property="og:image" content="https://nurmuhammedjoy.github.io/zenvim/images/preview.webp">
+<meta property="og:image:alt" content="Zenvim open in Termux, showing Telescope and the statusline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Zenvim: Neovim for Termux">
+<meta name="twitter:description" content="A fast Neovim configuration for Termux on Android, with LSP, completion and fuzzy finding tuned for touch keyboards.">
+<meta name="twitter:image" content="https://nurmuhammedjoy.github.io/zenvim/images/preview.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d2021'/%3E%3Cpath d='M16 14h32v8L26 42h22v8H16v-8l22-20H16z' fill='%23fabd2f'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,7 +117,6 @@
     letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--color-ink); text-decoration: none; white-space: nowrap;
   }
-  .mark::before { content: ""; width: 0.62em; height: 0.62em; margin-inline-end: var(--space-xs); background: var(--color-accent); }
   .slab-nav { margin-inline-start: var(--space-lg); }
   .slab-nav ul { display: flex; gap: var(--space-lg); margin: 0; padding: 0; list-style: none; }
   .slab-nav a {
@@ -218,15 +233,44 @@
     border: var(--rule-thick) solid var(--color-ink);
   }
   .tabs button {
+    position: relative; isolation: isolate;
     font: inherit; font-weight: 650; font-size: var(--text-sm);
     letter-spacing: 0.07em; text-transform: uppercase;
     padding: var(--space-sm) var(--space-md); min-height: 44px; white-space: nowrap;
     border: 0; border-radius: var(--radius-none);
     background: transparent; color: var(--color-ink-2); cursor: pointer;
-    transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    transition: color var(--dur-micro) var(--ease-out);
+  }
+  /* the ink panel wipes in behind the selected label */
+  .tabs button::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: var(--color-ink);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--dur-long) var(--ease-out);
   }
   .tabs button + button { border-inline-start: var(--rule-thick) solid var(--color-ink); }
-  .tabs button[aria-selected="true"] { background: var(--color-ink); color: var(--color-paper); }
+  .tabs button[aria-selected="true"] { color: var(--color-paper); }
+  .tabs button[aria-selected="true"]::before { transform: scaleX(1); }
+
+  /* two rows, active one 1fr and the other 0fr, so the grid morphs between the two panel heights
+   * instead of jumping; minmax(0,1fr) + overflow:hidden keep long <pre> lines from overflowing */
+  .panels {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr 0fr;
+    transition: grid-template-rows var(--dur-long) var(--ease-in-out);
+  }
+  .panels[data-tab="manual"] { grid-template-rows: 0fr 1fr; }
+  .panels > .code {
+    min-width: 0; min-height: 0; overflow: hidden;
+    opacity: 0; visibility: hidden;
+    transition: opacity var(--dur-short) var(--ease-out),
+                visibility var(--dur-long) var(--ease-out);
+  }
+  .panels[data-tab="auto"] > #panel-auto,
+  .panels[data-tab="manual"] > #panel-manual {
+    opacity: 1; visibility: visible;
+  }
 
   .code { border: var(--rule-thick) solid var(--color-ink); background: var(--color-code-bg); }
   .code-head {
@@ -287,7 +331,7 @@
   }
   .chips button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
   @media (hover: hover) and (pointer: fine) {
-    .tabs button:hover { color: var(--color-ink); }
+    .tabs button:not([aria-selected="true"]):hover { color: var(--color-ink); }
     .chips button:hover { border-color: var(--color-ink); color: var(--color-ink); }
     .copy:hover { background: var(--color-code-ink); color: var(--color-code-bg); }
   }
@@ -373,7 +417,57 @@
     .caret { animation: none; }
     .btn:hover { transform: none; }
   }
+
+  /* screenshot viewer: full-screen <dialog>, Esc and backdrop click close for free */
+  .shot img { cursor: zoom-in; }
+  .viewer {
+    width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; background: transparent;
+    place-items: center; overflow: hidden;
+  }
+  /* only lay out while open; a closed <dialog> must keep the UA display:none */
+  .viewer[open] { display: grid; }
+  .viewer::backdrop { background: oklch(0% 0 0 / 0.9); }
+  .viewer img { grid-area: 1 / 1; max-width: 100%; max-height: 100%; }  .viewer-close {
+    position: fixed; top: var(--space-sm); right: var(--space-sm);
+    display: grid; place-items: center; width: 2.75rem; height: 2.75rem;
+    border: var(--rule-thick) solid var(--color-ink); background: var(--color-paper); color: var(--color-ink);
+    cursor: pointer;
+  }
+  .viewer-close:hover { background: var(--color-ink); color: var(--color-paper); }
+  .viewer-close svg { width: 20px; height: 20px; }
 </style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://nurmuhammedjoy.github.io/zenvim/#software",
+      "name": "Zenvim",
+      "description": "A fast Neovim configuration for Termux on Android, with LSP, completion and fuzzy finding tuned for touch keyboards.",
+      "url": "https://nurmuhammedjoy.github.io/zenvim/",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Android (Termux)",
+      "softwareRequirements": "Termux on Android, Neovim 0.11.0 or newer, Git",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "codeRepository": "https://github.com/nurmuhammedjoy/zenvim",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "nurmuhammedjoy", "url": "https://github.com/nurmuhammedjoy" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://nurmuhammedjoy.github.io/zenvim/#website",
+      "name": "Zenvim",
+      "url": "https://nurmuhammedjoy.github.io/zenvim/",
+      "about": { "@id": "https://nurmuhammedjoy.github.io/zenvim/#software" },
+      "inLanguage": "en"
+    }
+  ]
+}
+</script>
 </head>
 
 <body>
@@ -400,18 +494,12 @@
   <section class="hero">
     <div class="wrap hero-split">
       <div>
-        <h1>Neovim that fits in your pocket</h1>
-        <p class="lede">Zenvim is a fast Neovim setup for <strong>Termux on Android</strong>. It comes with code intelligence, completion and fuzzy finding, and every keybinding works on a touch keyboard.</p>
+        <h1>Lightweight Neovim for Any Device</h1>
+        <p class="lede"><strong>Zenvim</strong> is a lightweight <strong>Neovim</strong> configuration for Termux on Android, tuned for low-end devices and on-screen keyboards. It starts in 40–70 ms and includes LSP, completion and Telescope.</p>
         <div class="actions">
           <a class="btn btn-fill" href="#install"><i data-lucide="download" aria-hidden="true"></i>Install Zenvim</a>
           <a class="btn" href="https://github.com/nurmuhammedjoy/zenvim"><i data-lucide="external-link" aria-hidden="true"></i>View on GitHub</a>
         </div>
-      </div>
-      <div class="hero-shot">
-        <figure class="shot">
-          <img src="https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/preview/preview.png?v=2" width="1840" height="864" fetchpriority="high" alt="Zenvim with the file explorer and a code buffer open">
-          <figcaption>mini.files and a buffer, in Termux</figcaption>
-        </figure>
       </div>
     </div>
   </section>
@@ -420,32 +508,32 @@
     <div class="wrap">
       <header class="head">
         <h2>What you get</h2>
-        <p>A small config that does the everyday work of an editor.</p>
+        <p>A minimal config that does the everyday work of an editor.</p>
       </header>
       <ul class="bento">
         <li class="cell cell-wide">
-          <h3><i data-lucide="zap" aria-hidden="true"></i>Starts fast</h3>
-          <p>Plugins load lazily through lazy.nvim, so Neovim opens quickly even on a phone.</p>
+          <h3><i data-lucide="zap" aria-hidden="true"></i>Starts in 40–70 ms</h3>
+          <p>Measured init time on an Android phone. Plugins load lazily through lazy.nvim, so Neovim is ready almost as soon as you open it.</p>
         </li>
         <li class="cell">
-          <h3><i data-lucide="braces" aria-hidden="true"></i>Understands your code</h3>
-          <p>Language servers for HTML, CSS, TypeScript, JSON, Emmet and Bash install through Mason. clangd and lua_ls are used from your PATH.</p>
+          <h3><i data-lucide="feather" aria-hidden="true"></i>Minimal, not bloated</h3>
+          <p>Only the plugins you actually use. Nothing extra to slow it down or get in your way.</p>
         </li>
         <li class="cell">
-          <h3><i data-lucide="text-cursor-input" aria-hidden="true"></i>Completes as you type</h3>
-          <p>blink.cmp suggests completions and LuaSnip adds snippets.</p>
+          <h3><i data-lucide="wand-sparkles" aria-hidden="true"></i>Sets itself up</h3>
+          <p>Install it and start the editor. Plugins and language servers are set up automatically.</p>
         </li>
         <li class="cell">
-          <h3><i data-lucide="search" aria-hidden="true"></i>Finds anything</h3>
-          <p>Telescope searches files and text. mini.files lets you browse folders.</p>
+          <h3><i data-lucide="smartphone" aria-hidden="true"></i>Made for small devices</h3>
+          <p>Light on resources, and keybindings chosen to be comfortable on a mobile keyboard.</p>
         </li>
         <li class="cell">
-          <h3><i data-lucide="palette" aria-hidden="true"></i>Easy on the eyes</h3>
-          <p>A transparent Gruvbox theme with a lualine statusline.</p>
+          <h3><i data-lucide="folder-tree" aria-hidden="true"></i>Easy to understand and change</h3>
+          <p>The configuration is well structured, so you can read it, see how it works, and modify it yourself.</p>
         </li>
         <li class="cell cell-wide">
-          <h3><i data-lucide="smartphone" aria-hidden="true"></i>Built for touch</h3>
-          <p>Keybindings are chosen to be comfortable on a mobile keyboard.</p>
+          <h3><i data-lucide="braces" aria-hidden="true"></i>Everything an editor needs</h3>
+          <p>Language servers for HTML, CSS, TypeScript, JSON, Emmet and Bash (via Mason), completion with blink.cmp and LuaSnip, Telescope and mini.files for finding things.</p>
         </li>
       </ul>
     </div>
@@ -459,9 +547,12 @@
       </header>
       <div class="shots">
         <figure class="shot">
-          <img loading="lazy" src="https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/preview/preview2.png?v=2" width="1840" height="864" alt="Zenvim showing Telescope and the statusline">
-          <figcaption>Telescope and the statusline</figcaption>
+          <img loading="lazy" src="images/preview2.webp" width="1840" height="864" alt="Zenvim showing Telescope and the statusline">
         </figure>
+        <figure class="shot">
+          <img loading="lazy" src="images/preview.webp" width="1840" height="864" alt="Zenvim showing Telescope and the statusline">
+        </figure>
+
       </div>
     </div>
   </section>
@@ -509,15 +600,16 @@
           <div>
             <h3 class="mb-md">Run the installer</h3>
             <div class="tabs" role="tablist" aria-label="Install method">
-              <button type="button" role="tab" id="tab-auto" aria-controls="panel-auto" x-ref="tabAuto"
+              <button type="button" role="tab" id="tab-auto" aria-controls="panel-auto" x-ref="tabAuto" aria-selected="true"
                       :aria-selected="tab === 'auto'" :tabindex="tab === 'auto' ? 0 : -1"
                       @click="tab = 'auto'" @keydown.arrow-right.prevent="tab = 'manual'; $refs.tabManual.focus()" @keydown.arrow-left.prevent="tab = 'manual'; $refs.tabManual.focus()">One command</button>
-              <button type="button" role="tab" id="tab-manual" aria-controls="panel-manual" x-ref="tabManual"
+              <button type="button" role="tab" id="tab-manual" aria-controls="panel-manual" x-ref="tabManual" aria-selected="false"
                       :aria-selected="tab === 'manual'" :tabindex="tab === 'manual' ? 0 : -1"
                       @click="tab = 'manual'" @keydown.arrow-right.prevent="tab = 'auto'; $refs.tabAuto.focus()" @keydown.arrow-left.prevent="tab = 'auto'; $refs.tabAuto.focus()">By hand</button>
             </div>
 
-            <div class="code" id="panel-auto" role="tabpanel" aria-labelledby="tab-auto" x-show="tab === 'auto'" x-transition.opacity.duration.160ms>
+            <div class="panels" data-tab="auto" :data-tab="tab">
+            <div class="code" id="panel-auto" role="tabpanel" aria-labelledby="tab-auto">
               <div class="code-head">
                 <span class="label">Termux — one command</span>
                 <button class="copy" type="button" @click="copy(cmds.auto, 'auto')">
@@ -527,7 +619,7 @@
 <pre><code><span class="p">$ </span>curl -fsSL https://raw.githubusercontent.com/nurmuhammedjoy/zenvim/main/build | bash<span class="caret" aria-hidden="true"></span></code></pre>
             </div>
 
-            <div class="code" id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" x-show="tab === 'manual'" x-cloak x-transition.opacity.duration.160ms>
+            <div class="code" id="panel-manual" role="tabpanel" aria-labelledby="tab-manual">
               <div class="code-head">
                 <span class="label">Termux — by hand</span>
                 <button class="copy" type="button" @click="copy(cmds.manual, 'manual')">
@@ -542,6 +634,7 @@ mkdir -p ~/.config/nvim
 cp -r zenvim/config/* ~/.config/nvim/
 <span class="p"># </span>remove the clone
 rm -rf zenvim</code></pre>
+            </div>
             </div>
 
             <ul class="notes">
@@ -637,10 +730,14 @@ rm -rf zenvim</code></pre>
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">Zenvim</p>
     <p class="colophon">
-      Zenvim — a Neovim configuration for Termux on Android. Made by <a href="https://github.com/nurmuhammedjoy">nurmuhammedjoy</a>.
-      Source under GPL-3.0 · <a href="https://github.com/nurmuhammedjoy/zenvim">github.com/nurmuhammedjoy/zenvim</a>.
-      <span class="colophon-end">© 2026.</span>
+      A Neovim configuration for Termux on Android.
     </p>
+    <p class="colophon">
+      <a href="https://github.com/nurmuhammedjoy/zenvim">Source on GitHub</a> ·
+      GPL-3.0 ·
+      Made by <a href="https://github.com/nurmuhammedjoy">nurmuhammedjoy</a>
+    </p>
+    <p class="colophon colophon-end">Last updated October 2026 · © 2026</p>
   </div>
 </footer>
 
@@ -730,6 +827,32 @@ rm -rf zenvim</code></pre>
   paintIcons();
   window.addEventListener('load', paintIcons);
   document.addEventListener('alpine:initialized', () => setTimeout(paintIcons, 0));
+</script>
+
+<dialog id="viewer" class="viewer" aria-label="Screenshot">
+  <button type="button" class="viewer-close" aria-label="Close"><i data-lucide="x" aria-hidden="true"></i></button>
+  <img alt="">
+</dialog>
+<script>
+  (() => {
+    const viewer = document.getElementById('viewer');
+    const viewerImg = viewer.querySelector('img');
+    const open = img => {
+      viewerImg.src = img.currentSrc || img.src;
+      viewerImg.alt = img.alt;
+      viewer.showModal();
+    };
+    for (const img of document.querySelectorAll('.shot img')) {
+      img.tabIndex = 0;
+      img.setAttribute('role', 'button');
+      img.addEventListener('click', () => open(img));
+      img.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(img); }
+      });
+    }
+    viewer.querySelector('.viewer-close').addEventListener('click', () => viewer.close());
+    viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
+  })();
 </script>
 </body>
 </html>
