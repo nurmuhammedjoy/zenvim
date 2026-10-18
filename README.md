@@ -40,9 +40,8 @@ A powerful yet lightweight Neovim configuration optimized for coding on Termux
 ## Preview
 
 <p align="center">
-  <img src="preview/preview.png" alt="App Screenshot" width="1200"/>
-  <img src="preview/preview2.png" alt="App Screenshot" width="1200"/>
-  <br>
+<img src="preview/preview.png?v=2" alt="App Screenshot" width="1200"/>
+<img src="preview/preview2.png?v=2" alt="App Screenshot" width="1200"/>
 </p>
 
 ---
