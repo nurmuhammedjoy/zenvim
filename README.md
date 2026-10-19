@@ -15,8 +15,7 @@
 </p>
 
 <p align="center">
-  <strong>Zenvim is a fast, modular Neovim config (IDE setup) for coding on Android with Termux.</strong><br>
-  One-command install · LSP · autocompletion · Telescope · touch-friendly keybindings
+  <strong>Zenvim is a fast, modular Neovim config (IDE setup) for coding on Android with Termux.</strong>
 </p>
 
 <p align="center">
