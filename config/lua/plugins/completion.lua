@@ -117,9 +117,8 @@ return {
           ghost_text = { enabled = true },
         },
 
-        -- LSP and snippets always preferred; buffer/path only as fallback
         sources = {
-          default = { "lsp", "snippets" },
+          default = { "lsp", "snippets", "buffer", "path" },
           providers = {
             buffer = { fallbacks = { "lsp", "snippets" } },
             path = { fallbacks = { "lsp", "snippets" } },

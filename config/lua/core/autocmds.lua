@@ -36,7 +36,7 @@ autocmd("LspAttach", {
   group = general,
   callback = function(event)
     if vim.b[event.buf].large_file then
-      vim.lsp.stop_client(event.data, true)
+      vim.lsp.stop_client(event.data.client_id, true)
       return
     end
     local buffer_opts = { buffer = event.buf, silent = true }
