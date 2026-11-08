@@ -68,8 +68,7 @@ return {
           ["<CR>"] = {
             function(cmp)
               if not cmp.is_visible() then return end
-              local list = require("blink.cmp.completion.list")
-              if list.is_explicitly_selected then return cmp.accept() end
+              return cmp.select_and_accept()
             end,
             "fallback",
           },
