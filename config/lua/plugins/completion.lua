@@ -119,10 +119,6 @@ return {
 
         sources = {
           default = { "lsp", "snippets", "buffer", "path" },
-          providers = {
-            buffer = { fallbacks = { "lsp", "snippets" } },
-            path = { fallbacks = { "lsp", "snippets" } },
-          },
         },
 
         snippets = { preset = "luasnip" },
